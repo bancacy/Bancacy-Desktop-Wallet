@@ -2,7 +2,7 @@
 
 ## KUBOCOIN Desktop Wallet
 
-Lunamonkey is happy to provide a private test version with an easy to use, cross-platform, secure desktop wallet for sending, receiving and storing your KUBOCOIN Tokens. This software is provided with no warrenty and should be used for experimental purposes only. This software has been forked under MIT licence from BTK (Bitcoin Token).
+Bancacy is happy to provide a public test version with an easy to use, cross-platform, secure desktop wallet for sending, receiving, investing and storing your BNY/XBNY Tokens. This software is provided with no warrenty and should be used for experimental purposes only. 
 
 ## Features Include
 
@@ -11,11 +11,11 @@ Lunamonkey is happy to provide a private test version with an easy to use, cross
 - Auto-recommendation of sending gas fee for the novice users.
 - Clean, simple user interface.
 
-This wallet is exclusive to KUBOCOIN tokens, you can't load other ERC-20 tokens into this wallet.
+This wallet is exclusive to Bancacy tokens, you can't load other ERC-20 tokens into this wallet.
 
 ## Screenshots
 
-![XOV Summary](./docs/img/summary.png)
+
 
 ## Security Vulnerabilities
 
