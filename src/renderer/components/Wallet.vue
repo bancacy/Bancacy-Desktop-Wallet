@@ -316,7 +316,8 @@
       },
 
       formatAmount: function (amount) {
-        return (amount);
+		    amount = amount || 0;
+        return web3.utils.fromWei(amount.toString());
       },
 
       getTxIcon: function (from) {

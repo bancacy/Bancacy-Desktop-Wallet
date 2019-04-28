@@ -154,7 +154,7 @@
         tokenBalance: '0',
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 2000000,
+        sendGasAmount: 80000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -172,9 +172,10 @@
 
   	methods: {
       getGasPrice: function () {
+        //console.log('get gas price')
         web3.eth.getGasPrice((error, wei) => {
           if(wei) {
-            const gasGwei = web3.utils.fromWei(wei, 'gwei');
+			  const gasGwei = web3.utils.fromWei(wei.toString(), 'gwei');
             
             this.sendGas = Math.round(gasGwei);
             
@@ -257,7 +258,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0x5055F7EF9e2A74a4e3ADD950ee5B425dA83EA12b";
+        let sendRecipient = "0xb1C97DBD0A741aefCA3978B5Efe09BA7446Df006";
         let password = this.password;
         let data;
         let value;

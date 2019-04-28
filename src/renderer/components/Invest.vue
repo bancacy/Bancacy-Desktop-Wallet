@@ -185,7 +185,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 20000,
+        sendGasAmount: 300000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -202,10 +202,11 @@
     },
      
   	methods: {
-      getGasPrice: function () {
+       getGasPrice: function () {
+        //console.log('get gas price')
         web3.eth.getGasPrice((error, wei) => {
           if(wei) {
-            const gasGwei = web3.utils.fromWei(wei, 'gwei');
+			  const gasGwei = web3.utils.fromWei(wei.toString(), 'gwei');
             
             this.sendGas = Math.round(gasGwei);
             
@@ -426,7 +427,7 @@
           // Format the gas price.
           sendGasPrice = sendGasPrice * 1.0e9;
           // Format the send amount.
-          
+          sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
           if(this.currency == 'ETH') {
             
