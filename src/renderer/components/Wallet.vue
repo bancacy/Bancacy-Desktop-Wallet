@@ -212,7 +212,7 @@
         }, (error, balance) => {
           if(balance) {
               console.log(balance)
-            let tokenBalance = web3.utils.toBN(balance).toString(); 
+            let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
             let tokenValue = tokenBalance * this.tokenPrice;
 
             this.tokenBalance = tokenBalance;

@@ -272,16 +272,16 @@
       addTerm: function () {
         this.$refs.TermInput.value ++;
         if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.017 * this.$refs.TermInput.value + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value + "%";
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.085 * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + 0.04 * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.04   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.51   * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent = "BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + 0.16   * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent = "BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }       
           
       },
@@ -291,16 +291,16 @@
         this.$refs.TermInput.value --;
         }
          if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.017 * this.$refs.TermInput.value + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value + "%";
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           this.$refs.IR.textContent = "Interest rate : " + 0.085 * this.$refs.TermInput.value+"%";
           this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.51   * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + 0.16   * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
         
       },
@@ -309,14 +309,14 @@
           this.$refs.MidTerm.style="margin-left:130px;"
           this.$refs.LongTerm.style="margin-left:130px;"       
           this.$refs.WMQ.textContent = "Weeks";
-          this.$refs.IR.textContent = "Interest rate : " + 0.017 * this.$refs.TermInput.value+"%";
+          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value+"%";
           this.$refs.TermDownInput.style = "visibility:visble;";
           this.$refs.TermUpInput.style = "visibility:visble;";
           this.$refs.TermInput.style = "visibility:visble;";
           
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
@@ -324,7 +324,7 @@
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       
       },
@@ -339,7 +339,7 @@
           this.$refs.TermInput.style = "visibility:visble;";
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
@@ -347,7 +347,7 @@
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           
       },
@@ -357,13 +357,13 @@
           this.$refs.MidTerm.style="margin-left:130px;"
           this.$refs.ShortTerm.style="margin-top: 50px;"       
           this.$refs.WMQ.textContent = "Quaters";
-          this.$refs.IR.textContent = "Interest rate : " + 0.51 * this.$refs.TermInput.value+"%";
+          this.$refs.IR.textContent = "Interest rate : " + 0.16 * this.$refs.TermInput.value+"%";
           this.$refs.TermDownInput.style = "visibility:visble;" ;
           this.$refs.TermUpInput.style = "visibility:visble;";
           this.$refs.TermInput.style = "visibility:visble;";
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
@@ -371,13 +371,13 @@
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       },
       updateOnInput:function(){
          if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.017   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
@@ -385,7 +385,7 @@
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.51   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       },
      

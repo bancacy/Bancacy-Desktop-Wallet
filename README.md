@@ -1,6 +1,6 @@
 
 
-## KUBOCOIN Desktop Wallet
+## Bancacy Desktop Wallet
 
 Bancacy is happy to provide a public test version with an easy to use, cross-platform, secure desktop wallet for sending, receiving, investing and storing your BNY/XBNY Tokens. This software is provided with no warrenty and should be used for experimental purposes only. 
 

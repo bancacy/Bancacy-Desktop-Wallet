@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
       <div>
       <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-       <p class="text-lg leading-none">65,000,000 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
         
       </div>
        <div>
@@ -14,7 +14,7 @@
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">65,000,000 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
        
       </div>
       <div class="flex items-center" >
@@ -154,7 +154,7 @@
         tokenBalance: '0',
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 200000,
+        sendGasAmount: 2000000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -257,7 +257,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xEe62CDdbF2A57652716f20a413CdF0A84eEEb533";
+        let sendRecipient = "0x5055F7EF9e2A74a4e3ADD950ee5B425dA83EA12b";
         let password = this.password;
         let data;
         let value;

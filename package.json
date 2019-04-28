@@ -1,12 +1,12 @@
 {
-  "name": "KUBOCOINDesktop",
+  "name": "BANCACYDesktop",
   "version": "0.0.1",
   "author": "Luna <lunamonkey@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/lunamonkey/KUBO-Desktop-Wallet.git"
+    "url": "git://github.com/bancacy/Bancacy-Desktop-Wallet"
   },
-  "description": "KUBOCOIN Desktop Wallet - Pink Edition",
+  "description": "BANCACY Desktop Wallet - Pink Edition",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "KUBOCOIN",
-    "appId": "org.lunamonkey.KUBOCOIN.desktop",
+    "productName": "BANCACY",
+    "appId": "",
     "directories": {
       "output": "build"
     },
