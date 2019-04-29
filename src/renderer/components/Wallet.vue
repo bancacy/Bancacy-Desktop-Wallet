@@ -52,12 +52,12 @@
             </tr>
             <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedTxs" @click="open(transaction.key)">
               <td width="40" height="50" class="px-2">
-                <span :style="transaction.from != walletAddress ? 'color: green' : ''">
+                <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">
                   <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
                 </span>
               </td>
               <td>
-                <span :style="transaction.from != walletAddress ? 'color: green' : ''">{{ formatAmount(transaction.amount) }}</span>
+                <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">{{ formatAmount(transaction.amount) }}</span>
               </td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
               <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
@@ -84,10 +84,13 @@
         <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
           <table class="w-full table-auto cursor-pointer">
             <tr class="bg-grey-lighter border-b border-grey-light">
-              <th class="py-4"></th>
+              <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
+              <th class="text-xs text-left font-semibold uppercase">INDEX   </th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
+              <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
+              
             </tr>
             <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
               <td width="40" height="50" class="px-2" style="vertical-align: middle;">
@@ -101,18 +104,26 @@
                 {{ pendingTx.key }}
               </td>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedTxs" @click="open(transaction.key)">
+            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS" @click="open(transaction.key)">
               <td width="40" height="50" class="px-2">
-                <span :style="transaction.from != walletAddress ? 'color: green' : ''">
-                  <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
+                <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">
+                  <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
                 </span>
               </td>
               <td>
-                <span :style="transaction.from != walletAddress ? 'color: green' : ''">{{ formatAmount(transaction.amount) }}</span>
+                <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
               </td>
+              <td>{{ transaction.ID }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
               <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction.key }}
+                <td><button 
+            type="button" 
+            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
+            
+            @click=""
+          >CLAIM 
+          </button></td>
               </td>
             </tr>
           </table>
@@ -146,7 +157,9 @@
         tokenBalance: '0',
         tokenValue: '0.00',
         completedTxs: [],
+        completedINVS: [],
         pendingTxs: [],
+        pendingINVS: [],
         refreshing: false
   		}
   	},
@@ -171,11 +184,17 @@
         let tokenBalance  = await localStorage.getItem('tokenBalance');
         let pendingTxs    = await localStorage.getItem('tokenPendingTxs');
         let completedTxs  = await localStorage.getItem('tokenCompletedTxs');
+        let completedINVS  = await localStorage.getItem('tokenCompletedINVS');
+        let pendingINVS    = await localStorage.getItem('tokenpendingINVS');
+       
 
         this.tokenPrice   = tokenPrice != null ? parseFloat(tokenPrice) : '-.--';
         this.tokenBalance = tokenBalance != null ? parseFloat(tokenBalance) : '0';
         this.pendingTxs   = pendingTxs != null ? JSON.parse(pendingTxs) : [];
         this.completedTxs = completedTxs != null ? JSON.parse(completedTxs) : [];
+        this.completedINVS = completedINVS != null ? JSON.parse(completedINVS) : [];
+        this.pendingINVS   = pendingINVS != null ? JSON.parse(pendingINVS) : [];
+      
 
         this.updateWallet();
       },
@@ -227,18 +246,31 @@
         this.refreshing = true;
 
         let pendingTxs = [];
-
+        let pendingINVS = [];
         web3.eth.getBlockNumber()
           .then(async response => {
             let listTxs = [];
+            let listINVS = [];
             let fromBlock = 0;
 
             if(this.completedTxs.length != null) {
               fromBlock = response - 86000;
             }
+            if(this.completedINVS.length != null) {
+              fromBlock = response - 86000;
+            }
             
             let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+            
 
+
+            let INV = await contract.getPastEvents('Deposit', { filter: {_investor: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
+            if(INV.length > 0) {
+              INV = _.uniqBy(INV, 'transactionHash');
+              for(let s = 0; s < INV.length; s++) {
+                listINVS.push(INV[s]);
+              }
+            }
             let toTxs = await contract.getPastEvents('Transfer', { filter: {_to: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(toTxs.length > 0) {
               toTxs = _.uniqBy(toTxs, 'transactionHash');
@@ -254,8 +286,12 @@
                 listTxs.push(fromTxs[j]);
               }
             }
+            
 
             listTxs.sort((a, b) => {
+              return parseInt(a.blockNumber) - parseInt(b.blockNumber);
+            });
+            listINVS.sort((a, b) => {
               return parseInt(a.blockNumber) - parseInt(b.blockNumber);
             });
 
@@ -279,6 +315,7 @@
                     let transactionHash = listTx.transactionHash;
                     let transactionFrom = listTx.returnValues._from;
                     let transactionAmount = listTx.returnValues._value;
+                    
 
                     if(pendingTxs.includes(listTx.transactionHash)) {
                       this.pendingTxs = this.pendingTxs.filter((tx) => {return tx.key != listTx.transactionHash});
@@ -308,8 +345,67 @@
               localStorage.setItem('tokenCompletedTxs', JSON.stringify(this.completedTxs));
               this.refreshing = false;
             } 
+
+
+
+
+
+
+             if(listINVS.length > 0) {
+              let lastINVTimestamp = 0;
+              let completedIN;
+
+              if(this.completedINVS.length > 0) {
+                lastINVTimestamp = parseInt(this.completedINVS[0].timestamp);
+              }
+
+              let tempPending = Object.values(this.pendingINVS);
+              for(var o = 0; o < tempPending.length; o++) {
+                pendingINVS.push(tempPending[o].key);
+              }
+
+              for(let listIN of listINVS) {
+                await web3.eth.getBlock(listIN.blockNumber)
+                  .then(response => {
+                    let timestamp = response.timestamp;
+                    let transactionHash = listIN.transactionHash;
+                    let transactionFrom = listIN.returnValues._from;
+                    let transactionAmount = listIN.returnValues._investmentValue;
+                    let transactionID = listIN.returnValues._ID;
+
+                    if(pendingINVS.includes(listIN.transactionHash)) {
+                      this.pendingINVS = this.pendingINVS.filter((tx) => {return tx.key != listIN.transactionHash});
+
+                      localStorage.setItem('tokenPendingINVS', JSON.stringify(this.pendingINVS));
+                    }
+
+                    if(parseInt(timestamp) > lastINVTimestamp) {
+                      completedIN = {
+                        key: transactionHash,
+                        timestamp: timestamp,
+                        from: _.toLower(transactionFrom),
+                        amount: transactionAmount,
+                        ID: transactionID
+                      };
+
+                      this.completedINVS = [completedIN].concat(this.completedINVS);
+
+                      localStorage.setItem('tokenCompletedINVS', JSON.stringify(this.completedINVS));
+
+                      this.refreshing = false;
+                    } else {
+                      this.refreshing = false;
+                    }
+                  }).catch(error => {console.log(error)});
+              }
+            }
+
+
           }).catch(error => {console.log(error)});
       },
+
+
+      
 
       formatTimestamp: function (timestamp) {
         return utils.formatTime(timestamp);

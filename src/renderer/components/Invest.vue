@@ -193,6 +193,7 @@
         sendGas: 10,
         loading: false,
         error: []
+      
   		}
   	},
     
@@ -447,9 +448,11 @@
            var  term123 = 3;
             var unlockTime = this.$refs.TermInput.value  * 604800 ;
            }
-           console.log(unlockTime);
-           console.log(sendAmount);
-           console.log(term123);
+         
+         
+
+       
+        
             data = contract.methods.investment(unlockTime,sendAmount, term123).encodeABI();
             // Change the recipient to be the token contract address.
             sendRecipient = env.contractAddress;
@@ -477,7 +480,11 @@
           alert('You did not fill in all of the required fields.');
         }
       },
+    
 
+
+        
+        
       send: function (transaction, password) {
         walletKeystore.load(password, (ks) => {
           ks.keyFromPassword(password, (error, pwDerivedKey) => {
@@ -488,7 +495,7 @@
             } else {
               ks.generateNewAddress(pwDerivedKey, 1);
               // Broadcast Transaction
-              console.log("GOOD");
+              
               web3.eth.getTransactionCount(this.walletAddress, (error, nonce) => {
                 // Add nonce to the transaction object.
                 transaction.nonce = nonce;
@@ -500,7 +507,7 @@
                       key: txHash,
                       address: this.walletAddress
                     };
-                    console.log("GOOD");
+                  
                     // Save to storage.
                     if(this.currency == 'ETH') {
                       let txs = await localStorage.getItem('ethPendingTxs');
@@ -511,7 +518,7 @@
                       await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
 
                     } else {
-                      console.log("GOOD");
+                  
                       let txs = localStorage.getItem('tokenPendingTxs');
 
                       txs = txs == null ? [] : JSON.parse(txs);
