@@ -121,7 +121,7 @@
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
             
-            @click=""
+            @click="ClaimInvestment(transaction.ID)"
           >CLAIM 
           </button></td>
               </td>
@@ -134,12 +134,15 @@
 </template>
 
 <script>
+  import walletKeystore from './../common/Keystore';
   import WalletHeader from './WalletHeader';
   import env from './../common/Environment';
   import utils from './../common/Utilities';
   import _ from 'lodash';
   import Web3 from 'web3';
   import axios from 'axios';
+  import Invest from './Invest';
+  import {sign} from 'ethjs-signer';
 
   const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
 
@@ -230,7 +233,7 @@
           data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
         }, (error, balance) => {
           if(balance) {
-              console.log(balance)
+            
             let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
             let tokenValue = tokenBalance * this.tokenPrice;
 
@@ -424,7 +427,93 @@
         const url = 'https://etherscan.io/tx/' + txHash;
 
         this.$electron.shell.openExternal(url);
+      },
+
+
+      ClaimInvestment: function (ID) {
+        
+ID = ID - 1;
+
+
+let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+let data = contract.methods.releaseInvestment(ID).encodeABI();
+
+
+
+            let transaction = {
+              to: env.contractAddress,
+              value: '0',
+              gas: '300000',
+              gasPrice: '1000000000',
+              data: data
+            };
+            // Send the transaction.console.log(balance);
+            const storedPassword =  localStorage.getItem('passwordEncrypted');
+            console.log(this.walletAddress);
+
+            this.send(transaction,"123");
+
+
+      },
+      send: function (transaction, password) {
+        walletKeystore.load(password, (ks) => {
+          ks.keyFromPassword(password, (error, pwDerivedKey) => {
+            if(error) {
+              this.loading = false;
+              alert('Password key error.');
+              return;
+            } else {
+              ks.generateNewAddress(pwDerivedKey, 1);
+              // Broadcast Transaction
+              
+              web3.eth.getTransactionCount(this.walletAddress, (error, nonce) => {
+                // Add nonce to the transaction object.
+                transaction.nonce = nonce;console.log(nonce);
+                // Sign the transaction and send.
+                web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
+                  console.log(txHash);
+                  if(txHash) {
+                    // Set pending tx.
+                    let pendingTx = {
+                      key: txHash,
+                      address: this.walletAddress
+                    };
+                  
+                    // Save to storage.
+                    if(this.currency == 'ETH') {
+                      let txs = await localStorage.getItem('ethPendingTxs');
+
+                      txs = txs == null ? [] : JSON.parse(txs);
+                      txs.push(pendingTx);
+
+                      await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
+
+                    } else {
+                  
+                      let txs = localStorage.getItem('tokenPendingTxs');
+
+                      txs = txs == null ? [] : JSON.parse(txs);
+                      txs.push(pendingTx);
+
+                      await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
+                    }
+                    // Return to summary screen.
+                    if(this.currency == 'ETH') {
+                      this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
+                    } else {
+                      this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
+                    }
+                  } else {
+                  
+                    this.loading = false;
+                    alert('There was a problem sending this transaction.');
+                  }
+                });
+              });
+            }
+          });
+        });
       }
-  	}
+    }
   }
 </script>

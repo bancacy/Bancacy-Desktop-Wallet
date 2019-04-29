@@ -22,6 +22,8 @@ class Keystore {
 			})
 		} catch (error) {
 			alert('Keystore loading error.');
+			
+		
 		}
 	}
 
