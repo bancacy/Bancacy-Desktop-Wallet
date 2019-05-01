@@ -17,13 +17,7 @@
               >
                 {{ tokenTicker }}
               </button>
-              <button 
-                class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
-                :class="currency == tokenTicker ? 'bg-grey-lightest' : 'bg-grey-light'"
-                @click="setCurrency('ETH')"
-              >
-                ETH
-              </button>
+              
             </div>
           </div>
         <button 
