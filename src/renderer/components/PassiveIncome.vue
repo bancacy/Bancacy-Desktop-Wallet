@@ -7,7 +7,7 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 class="mb-2">Send {{ currency }}</h3>
+            <h3 class="mb-2">Passive Income Platform </h3>
             <div class="inline-flex">
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
@@ -16,24 +16,10 @@
               >
                 {{ tokenTicker }}
               </button>
-              <button 
-                class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
-                :class="currency == tokenTicker ? 'bg-grey-lightest' : 'bg-grey-light'"
-                @click="setCurrency('ETH')"
-              >
-                ETH
-              </button>
+            
             </div>
           </div>
-          <div>
-            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Pay To</label>
-            <input 
-              type="text" 
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-              placeholder="Recipient Address"
-              v-model="sendRecipient"
-            >
-          </div>
+          
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label>
@@ -128,7 +114,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 80000,
+        sendGasAmount: 300000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -224,11 +210,8 @@
         let data;
         let value;
 
-        if(sendGasPrice != '' && sendGasAmount != '' && sendAmount != '' && sendRecipient != '' && password != '') {
-          if(!web3.utils.isAddress(sendRecipient)) {
-            alert('Recipient address is not valid.');
-            return;
-          } else if(sendEthBalance <= 0) {
+        if(sendGasPrice != '' && sendGasAmount != '' && sendAmount != ''  && password != '') {
+          if(sendEthBalance <= 0) {
             alert('Please deposit ETH to send tokens.');
             return;
           } else if(sendGasPrice <= 0) {
@@ -260,7 +243,7 @@
           } else {
             let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 
-            data = contract.methods.transfer(sendRecipient, sendAmount).encodeABI();
+            data = contract.methods.passiveIncomeInvestment(sendAmount).encodeABI();
             // Change the recipient to be the token contract address.
             sendRecipient = env.contractAddress;
             value = 0;
