@@ -133,7 +133,7 @@
              ref="TermDownInput" style="visibility:visble;"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
             
-            @click="ClaimPassiveIncome(transaction.ID)"
+            @click="ClaimInvestment(transaction.ID)"
           >CLAIM 
           </button></td>
               </td>
@@ -194,24 +194,24 @@
                 {{ pendingPS.key }}
               </td>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedPSVS" @click="open(transaction.key)">
+            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS" @click="open(transaction2.key)">
               <td width="40" height="50" class="px-2">
-                <span :style="transaction.amount > 0 ? 'color: green' : 'color: blue'">
+                <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">
                   <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
                 </span>
               </td>
               <td>
-                <span :style="transaction.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
+                <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction2.amount) }}</span>
               </td>
               <td></td>
-              <td>{{ formatTimestamp(transaction.timestamp) }}</td>
+              <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-                {{ transaction.key }}
+                {{ transaction2.key }}
                 <td><button 
             type="button"
              ref="TermDownInput" style="visibility:visble;"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            @click="ClaimPassiveIncome(transaction.ID)"
+            @click="ClaimPassiveIncome(transaction2.ID)"
             
           >CLAIM 
           </button></td>
@@ -541,7 +541,7 @@
                     let transactionHash = listPS.transactionHash;
                     let transactionFrom = listPS.returnValues._investor2;
                     let transactionAmount = listPS.returnValues._investmentValue2;
-                   
+                   let transactionID2 = listPS.returnValues._ID;
 
                     if(pendingPSVS.includes(listPS.transactionHash)) {
                       this.pendingPSVS = this.pendingPSVS.filter((tx) => {return tx.key != listPS.transactionHash});
@@ -555,7 +555,7 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                      
+                        ID: transactionID2
                       };
 
                       this.completedPSVS = [completedPS].concat(this.completedPSVS);
