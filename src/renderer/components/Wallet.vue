@@ -72,9 +72,20 @@
       <div class="rounded-lg bg-white shadow">
         <div class="flex justify-between py-3 border-b border-grey-light">
           <h3 class="pl-3 mt-1">{{ tokenTicker }} Investments</h3>
+          <div>
+           
+            <input 
+              type="password" 
+              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
+              v-model="password"
+              placeholder="Wallet Password" 
+            >
+            
+          </div>
           <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
             <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
           </button>
+          
         </div>
 
         <p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
@@ -115,10 +126,11 @@
               </td>
               <td>{{ transaction.ID }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+              <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction.key }}
                 <td><button 
-            type="button" 
+            type="button"
+             ref="TermDownInput" style="visibility:visble;"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
             
             @click="ClaimInvestment(transaction.ID)"
@@ -163,6 +175,7 @@
         completedINVS: [],
         pendingTxs: [],
         pendingINVS: [],
+        password: '',
         refreshing: false
   		}
   	},
@@ -433,25 +446,40 @@
       ClaimInvestment: function (ID) {
         
 ID = ID - 1;
-
-
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
-
-
-
+let pass = this.password;
+contract.methods.InvestmentStatus(ID).call().then((result) =>  { 
+ if(!result){
+    const storedPassword =  localStorage.getItem('passwordEncrypted');
+   
+if(pass != ''){
+if(web3.utils.sha3(pass) != storedPassword) {
+            alert('Invalid password.');
+            return}
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '300000',
+              gas: '3000000',
               gasPrice: '1000000000',
               data: data
             };
             // Send the transaction.console.log(balance);
-            const storedPassword =  localStorage.getItem('passwordEncrypted');
-            console.log(this.walletAddress);
+           
+            
+          
+           return(this.send(transaction,pass));
+          
+            
+}else{
+  alert("Please enter your wallet password");
+}
+  }else alert("Investment already claimed");
+});
 
-            this.send(transaction,"123");
+
+ 
+
 
 
       },
@@ -472,31 +500,19 @@ let data = contract.methods.releaseInvestment(ID).encodeABI();
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
                   console.log(txHash);
-                  if(txHash) {
+                  if(txHash) { alert("Investment Claimed!");
+                  
+                  this.$refs.TermDownInput.style = "visibility:hidden;"
+                  this.$refs.TermDownInput.style = "visibility:hidden;";
+                  this.$refs.TermDownInput.style="background-color: #F00"
+                  this.$refs.TermDownInput.style="background-color: #F00";
                     // Set pending tx.
                     let pendingTx = {
                       key: txHash,
                       address: this.walletAddress
                     };
                   
-                    // Save to storage.
-                    if(this.currency == 'ETH') {
-                      let txs = await localStorage.getItem('ethPendingTxs');
-
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
-
-                      await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
-
-                    } else {
-                  
-                      let txs = localStorage.getItem('tokenPendingTxs');
-
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
-
-                      await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
-                    }
+                    
                     // Return to summary screen.
                     if(this.currency == 'ETH') {
                       this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
@@ -506,7 +522,7 @@ let data = contract.methods.releaseInvestment(ID).encodeABI();
                   } else {
                   
                     this.loading = false;
-                    alert('There was a problem sending this transaction.');
+                    alert('There was a problem claiming this transaction.');
                   }
                 });
               });

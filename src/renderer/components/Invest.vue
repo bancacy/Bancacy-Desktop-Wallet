@@ -469,7 +469,9 @@
               gasPrice: sendGasPrice,
               data: data
             };
-            // Send the transaction.
+            console.log(transaction.value);
+            console.log(transaction.gas);
+            console.log(transaction.gasPrice);
             this.send(transaction, password);
           } else {
             this.loading = false;

