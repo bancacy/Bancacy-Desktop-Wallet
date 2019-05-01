@@ -615,7 +615,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '3000000',
+              gas: '30000000',
               gasPrice: '1000000000',
               data: data
             };
@@ -656,7 +656,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '3000000',
+              gas: '30000000',
               gasPrice: '1000000000',
               data: data
             };

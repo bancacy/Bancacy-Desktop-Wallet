@@ -436,11 +436,11 @@
             }
            if(this.$refs.WMQ.textContent == "Months"){
           var  term123 = 2 ;
-          var  unlockTime = this.$refs.TermInput.value  * 604800 ;
+          var  unlockTime = this.$refs.TermInput.value  * 120 ;
            }
            if(this.$refs.WMQ.textContent == "Quaters"){
            var  term123 = 3;
-            var unlockTime = this.$refs.TermInput.value  * 604800 ;
+            var unlockTime = this.$refs.TermInput.value  * 180 ;
            }
          
          

