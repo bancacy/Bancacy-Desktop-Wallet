@@ -9,7 +9,7 @@
       <div class="flex items-center">
         <div class="mr-12">
           <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ tokenBalance }} {{ tokenTicker }}</p>
+          <p class="text-lg leading-none">{{ (tokenBalance) }} {{ tokenTicker }}</p>
         </div>
         <div>
           <p class="text-xs text-center uppercase leading-normal">Value</p> 
@@ -502,10 +502,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
                   console.log(txHash);
                   if(txHash) { alert("Investment Claimed!");
                   
-                  this.$refs.TermDownInput.style = "visibility:hidden;"
-                  this.$refs.TermDownInput.style = "visibility:hidden;";
-                  this.$refs.TermDownInput.style="background-color: #F00"
-                  this.$refs.TermDownInput.style="background-color: #F00";
+                  
                     // Set pending tx.
                     let pendingTx = {
                       key: txHash,

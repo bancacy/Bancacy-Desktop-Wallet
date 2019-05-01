@@ -38,7 +38,7 @@
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
                 :class="currency == tokenTicker ? 'bg-grey-lightest' : 'bg-grey-light'"
-                @click="setCurrency('ETH')"
+              
               >
                 ETH
               </button>
@@ -78,7 +78,7 @@
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                
-                 <span {{ sendEthBalance }} {{ currency }} Available</span>
+                 <span> {{ sendEthBalance }} {{ currency }} Available</span>
                </span>
               <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
             
@@ -228,7 +228,7 @@
           this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
           this.Rate   = Rate != null ? parseFloat(Rate) : '0';
           this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
-
+         this.currency = "ETH";
         this.getEthPrice();
         this.getTokenBalance();
         this.getEthBalance();
@@ -251,14 +251,14 @@
 let data = contract.methods.tokensSold().encodeABI();
 
 contract.methods.tokensSold().call().then((result) =>  { 
-         localStorage.setItem('tokensSold', JSON.parse(result/1000000000000000000));
+         localStorage.setItem('tokensSold', JSON.parse((result/1000000000000000000)).toFixed(2));
       });
      
       contract.methods.totalSupply().call().then((result) =>  { 
-         localStorage.setItem('Rate', JSON.parse(result/1000000000000000000));  
+         localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));  
       })
       contract.methods.balanceOf(address[0]).call().then((result) =>  { 
-         localStorage.setItem('totalDeposit', JSON.parse(result/1000000000000000000));
+         localStorage.setItem('totalDeposit', JSON.parse((result/1000000000000000000)).toFixed(2));
       })
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
           .then(response => {
