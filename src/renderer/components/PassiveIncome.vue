@@ -234,7 +234,7 @@
           // Format the gas price.
           sendGasPrice = sendGasPrice * 1.0e9;
           // Format the send amount.
-         
+         sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
           if(this.currency == 'ETH') {
              

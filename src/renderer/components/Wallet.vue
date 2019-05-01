@@ -211,7 +211,7 @@
             type="button"
              ref="TermDownInput" style="visibility:visble;"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            
+            @click="ClaimPassiveIncome(transaction.ID)"
             
           >CLAIM 
           </button></td>
@@ -605,6 +605,47 @@ let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
 contract.methods.InvestmentStatus(ID).call().then((result) =>  { 
+ if(!result){
+    const storedPassword =  localStorage.getItem('passwordEncrypted');
+   
+if(pass != ''){
+if(web3.utils.sha3(pass) != storedPassword) {
+            alert('Invalid password.');
+            return}
+            let transaction = {
+              to: env.contractAddress,
+              value: '0',
+              gas: '3000000',
+              gasPrice: '1000000000',
+              data: data
+            };
+            // Send the transaction.console.log(balance);
+           
+            
+          
+           return(this.send(transaction,pass));
+          
+            
+}else{
+  alert("Please enter your wallet password");
+}
+  }else alert("Investment already claimed");
+});
+
+
+ 
+
+
+
+      },
+
+      ClaimPassiveIncome: function (ID) {
+        
+ID = ID - 1;
+let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+let data = contract.methods.releasePasiveIncome(ID).encodeABI();
+let pass = this.password;
+contract.methods.PassiveIncomeStatus(ID).call().then((result) =>  { 
  if(!result){
     const storedPassword =  localStorage.getItem('passwordEncrypted');
    
