@@ -33,9 +33,9 @@
           <i class="fa fa-arrow-up"></i>
            Pasive income
         </a>
-        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"style="margin-top: 15px">
+        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-grey-dark" style="margin-top: 15px; color: #C0C0C0">
           <i class="fa fa-arrow-up"></i>
-          Lending
+          Asset Solidification
         </a>
       </div>
     </div>

@@ -7,7 +7,7 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 class="mb-2">Invest {{ currency }}</h3>
+            <h3  style="margin-left: 270px;" class="mb-2">Invest {{ currency }}</h3>
 
             <div class="inline-flex">
               <button 
@@ -46,7 +46,7 @@
             @click="LongTerm"
           >Long-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
         </button>
-        
+        <p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <div class="flex justify-between">
               <label style="margin-top: 30px;" ref="WMQ" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"  ></label>
@@ -76,9 +76,9 @@
                 </p>
               </div>
             </div>
-                
-                  
-               
+                <p> &nbsp;<p>
+                 
+              
               
             <div class="flex justify-between">
             
@@ -88,6 +88,7 @@
                  <span  v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
                  <span  v-else>{{ sendEthBalance }} {{ currency }} Available</span>
                </span>
+               
               <a href="#"  class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax()">Invest Max</a>
             </div>
             <input 
@@ -99,6 +100,7 @@
               v-model="sendAmount"
             >
           </div>
+          <p> &nbsp;<p><p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Investing Gas Fee</label>
@@ -128,7 +130,7 @@
                 </p>
               </div>
             </div>
-          </div>
+          </div><p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
@@ -140,7 +142,7 @@
             
           </div>
           
-          <button 
+          <button  
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
             style="margin-top: 5px;margin-left: 230px;" 

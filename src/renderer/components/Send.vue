@@ -7,8 +7,8 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 class="mb-2">Send {{ currency }}</h3>
-            <div class="inline-flex">
+            <h3 style="margin-left: 270px;" class="mb-2">Send {{ currency }}</h3>
+            <div class="inline-flex"> 
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
                 :class="currency == tokenTicker ? 'bg-grey-light' : 'bg-grey-lightest'"
@@ -24,7 +24,7 @@
                 ETH
               </button>
             </div>
-          </div>
+          </div><p> &nbsp;<p><p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Pay To</label>
             <input 
@@ -79,7 +79,7 @@
                 </p>
               </div>
             </div>
-          </div>
+          </div><p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
