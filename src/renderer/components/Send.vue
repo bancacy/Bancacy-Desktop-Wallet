@@ -128,7 +128,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 80000,
+        sendGasAmount: 3000000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,

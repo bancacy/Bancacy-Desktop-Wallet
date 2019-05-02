@@ -179,13 +179,15 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 300000,
+        sendGasAmount: 3000000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
         password: '',
         sendGas: 10,
         loading: false,
+        totalDeposit2: '0',
+        totalsupply2: '0',
         error: []
       
   		}
@@ -214,12 +216,16 @@
         let ethPrice      = await localStorage.getItem('ethPrice');
         let ethBalance    = await localStorage.getItem('ethBalance');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
-
+        let totalDeposit2  = await localStorage.getItem('totalDeposit2');
+        let totalsupply2  = await localStorage.getItem('Rate2');
+         
         this.ethPrice = ethPrice;
         this.sendEthBalance = ethBalance;
         this.sendTokenBalance = tokenBalance;
-
+         this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
+          this.totalsupply2   = totalsupply2 != null ? parseFloat(totalsupply2) : '0';
         this.getEthPrice();
+        
       },
    
       getEthPrice: function () {
@@ -231,8 +237,15 @@
               this.ethPrice = response.data.USD;
             }
           }).catch(error => {console.log(error)});
+          let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        contract.methods.totalSupply().call().then((result) =>  { 
+         localStorage.setItem('Rate2', JSON.parse((result/1000000000000000000)).toFixed(2));  
+      })
+      contract.methods.balanceOf('0x0000000000000000000000000000000000000000').call().then((result) =>  { 
+         localStorage.setItem('totalDeposit2', JSON.parse((result/1000000000000000000)).toFixed(2));
+      })
       },
-
+    
       addGwei: function () {
         this.sendGas = this.sendGas + 1;
         this.setSendGasFee();
@@ -258,26 +271,28 @@
       },
        
       sendMax: function () {
+        this.updateOnInput();
         if(this.currency == 'ETH') {
           this.sendAmount = this.sendEthBalance;
         } else {
           this.sendAmount = this.sendTokenBalance;
         }
-       
+      
+
       },
       addTerm: function () {
         this.$refs.TermInput.value ++;
         if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " +((1 - this.totalDeposit2/this.totalsupply2) * 0.0016) *100* this.$refs.TermInput.value + "%";
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.04 * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.04   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )  *100  * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent ="BNY earned : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )      * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.16   * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent = "BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032 * 100   * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent = "BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }       
           
       },
@@ -287,16 +302,16 @@
         this.$refs.TermInput.value --;
         }
          if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " + ((1 - this.totalD54eposit2/this.totalsupply2) * 0.0016) *100* this.$refs.TermInput.value + "%";
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.085 * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )  *100* this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 ))    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " + 0.16   * this.$refs.TermInput.value+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.IR.textContent = "Interest rate : " +  (1 - this.totalDeposit2/this.totalsupply2) *0.032 * 100   * this.$refs.TermInput.value+"%";
+          this.$refs.netInterts.textContent ="BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
         
       },
@@ -305,22 +320,22 @@
           this.$refs.MidTerm.style="margin-left:130px;"
           this.$refs.LongTerm.style="margin-left:130px;"       
           this.$refs.WMQ.textContent = "Weeks";
-          this.$refs.IR.textContent = "Interest rate : " + 0.008 * this.$refs.TermInput.value+"%";
+          this.$refs.IR.textContent = "Interest rate : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)*100* this.$refs.TermInput.value+"%";
           this.$refs.TermDownInput.style = "visibility:visble;";
           this.$refs.TermUpInput.style = "visibility:visble;";
           this.$refs.TermInput.style = "visibility:visble;";
           
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       
       },
@@ -329,21 +344,21 @@
           this.$refs.LongTerm.style="margin-left:130px;"
           this.$refs.ShortTerm.style="margin-top: 50px;"
           this.$refs.WMQ.textContent = "Months";
-          this.$refs.IR.textContent = "Interest rate : " + 0.085 * this.$refs.TermInput.value+"%";
+          this.$refs.IR.textContent = "Interest rate : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 ) *100 * this.$refs.TermInput.value+"%";
           this.$refs.TermDownInput.style = "visibility:visble;";
           this.$refs.TermUpInput.style = "visibility:visble;";
           this.$refs.TermInput.style = "visibility:visble;";
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           
       },
@@ -353,35 +368,35 @@
           this.$refs.MidTerm.style="margin-left:130px;"
           this.$refs.ShortTerm.style="margin-top: 50px;"       
           this.$refs.WMQ.textContent = "Quaters";
-          this.$refs.IR.textContent = "Interest rate : " + 0.16 * this.$refs.TermInput.value+"%";
+          this.$refs.IR.textContent = "Interest rate : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032 *100 * this.$refs.TermInput.value+"%";
           this.$refs.TermDownInput.style = "visibility:visble;" ;
           this.$refs.TermUpInput.style = "visibility:visble;";
           this.$refs.TermInput.style = "visibility:visble;";
           if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       },
       updateOnInput:function(){
          if(this.$refs.WMQ.textContent == "Weeks"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.008   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value;
         }
           if(this.$refs.WMQ.textContent == "Months"){
           
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.085   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
           if(this.$refs.WMQ.textContent == "Quaters"){
          
-          this.$refs.netInterts.textContent ="BNY earned : " + 0.16   * this.$refs.TermInput.value * this.$refs.AmountToken.value;
+          this.$refs.netInterts.textContent ="BNY earned : " + (1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value;
           }
       },
      
@@ -392,7 +407,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0x0000000000000000000000000000000000000000";
+        let sendRecipient = "0xCE085F3eCe8bf44D1dCfda3AE2c17D5e00e81570";
         let password = this.password;
         let data;
         let value;
@@ -436,7 +451,7 @@
             }
            if(this.$refs.WMQ.textContent == "Months"){
           var  term123 = 2 ;
-          var  unlockTime = this.$refs.TermInput.value  * 120 ;
+          var  unlockTime = this.$refs.TermInput.value  * 1100 ;
            }
            if(this.$refs.WMQ.textContent == "Quaters"){
            var  term123 = 3;

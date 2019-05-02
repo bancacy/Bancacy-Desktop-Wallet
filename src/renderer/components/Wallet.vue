@@ -600,7 +600,7 @@
 
       ClaimInvestment: function (ID) {
         
-ID = ID - 1;
+ID = ID - 1; console.log(ID);
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
@@ -615,7 +615,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '30000000',
+              gas: '3000000',
               gasPrice: '1000000000',
               data: data
             };
@@ -656,7 +656,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '30000000',
+              gas: '3000000',
               gasPrice: '1000000000',
               data: data
             };
@@ -693,7 +693,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
               
               web3.eth.getTransactionCount(this.walletAddress, (error, nonce) => {
                 // Add nonce to the transaction object.
-                transaction.nonce = nonce;console.log(nonce);
+                transaction.nonce = nonce;
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
                   console.log(txHash);
