@@ -409,7 +409,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xCE085F3eCe8bf44D1dCfda3AE2c17D5e00e81570";
+        let sendRecipient = "0x83BD8d1bE42D7671BDA9E21E4540FA3A30b1D560";
         let password = this.password;
         let data;
         let value;
@@ -453,7 +453,7 @@
             }
            if(this.$refs.WMQ.textContent == "Months"){
           var  term123 = 2 ;
-          var  unlockTime = this.$refs.TermInput.value  * 1100 ;
+          var  unlockTime = this.$refs.TermInput.value  * 120 ;
            }
            if(this.$refs.WMQ.textContent == "Quaters"){
            var  term123 = 3;

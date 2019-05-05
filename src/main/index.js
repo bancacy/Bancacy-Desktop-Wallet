@@ -16,7 +16,8 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     height: 700,
-    width: 1050
+    width: 1324,
+    icon:  'C:/Users/N-Elias/Documents/GitHub/Bancacy-Desktop-Wallet/src/renderer/assets/img/favicon.jpg'
   });
 
   mainWindow.loadURL(winURL)

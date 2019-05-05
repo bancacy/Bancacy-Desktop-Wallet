@@ -29,7 +29,7 @@
           <i class="fa fa-arrow-up"></i>
            Buy BNY
         </a>
-        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"style="margin-left: 35px;">
+        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"style="margin-left: 0px;">
           <i class="fa fa-arrow-up"></i>
            Pasive income
         </a>

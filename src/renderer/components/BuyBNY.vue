@@ -49,7 +49,7 @@
                   Current Price Discount: {{0.25 * (1-(tokensSold / 227000000)).toFixed(4)}} %
                 </p>
                 <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 506000 + 506000).toFixed(2) }} BNY
+                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 200000000 + 200000000).toFixed(2) }} BNY
                 </p>
                 
             
@@ -182,7 +182,7 @@
         sendRecipient: '',
         sendAmount: '',
         sendAmount2: '',
-        sendGasAmount: 3000000,
+        sendGasAmount: 8000000,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -315,12 +315,12 @@ contract.methods.tokensSold().call().then((result) =>  {
       
       },
       adj: function(){
-        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 506000 + 506000);
+        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 200000000 + 200000000);
         
       },
       adj2: function(){
         
-        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 506000 + 506000) ;
+        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 200000000 + 200000000) ;
       },
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
@@ -329,7 +329,7 @@ contract.methods.tokensSold().call().then((result) =>  {
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xCE085F3eCe8bf44D1dCfda3AE2c17D5e00e81570";
+        let sendRecipient = "0xe2c772ae4b3378adb53192D4322d0140aC99A60e";
         let password = this.password;
         let data;
         let value;
