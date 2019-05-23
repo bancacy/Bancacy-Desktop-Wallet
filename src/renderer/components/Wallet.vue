@@ -334,7 +334,7 @@
             let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
             let tokenValue = tokenBalance * this.tokenPrice;
 
-            this.tokenBalance = tokenBalance;
+            this.tokenBalance = utils.format(tokenBalance, 2);
             this.tokenValue = utils.format(tokenValue, 2);
 
             localStorage.setItem('tokenBalance', tokenBalance.toString());
