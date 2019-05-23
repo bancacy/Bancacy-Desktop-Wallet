@@ -315,7 +315,7 @@
             }
           }).catch(error => {console.log(error)});
           */
-          axios.get('https://api.coingecko.com/api/v3/coins/kubocoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false')
+          axios.get('https://api.coingecko.com/api/v3/coins/pundi-x?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false')
           .then(response => {
               if (response.data.market_data.current_price.usd != undefined) {
                   localStorage.setItem('tokenPrice', JSON.parse(response.data.market_data.current_price.usd).toString());

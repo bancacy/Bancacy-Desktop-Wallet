@@ -22,19 +22,19 @@
           Send
         </a>
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('Invest')"> 
-          <i class="fa fa-arrow-up"></i>
+          <i class="fa fa-dollar-sign"></i>
           Invest
         </a>
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('BuyBNY')">
-          <i class="fa fa-arrow-up"></i>
+          <i class="fa fa-money-bill-alt"></i>
            Buy BNY
         </a>
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"style="margin-left: 0px;">
-          <i class="fa fa-arrow-up"></i>
-           Pasive income
+          <i class="fa fa-percent"></i>
+           Pasive Income
         </a>
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-grey-dark" style="margin-top: 15px; color: #C0C0C0">
-          <i class="fa fa-arrow-up"></i>
+          <i class="fa fa-exchange-alt"></i>
           Asset Solidification
         </a>
       </div>
