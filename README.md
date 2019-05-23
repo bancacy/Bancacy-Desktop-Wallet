@@ -15,7 +15,7 @@ This wallet is exclusive to Bancacy tokens, you can't load other ERC-20 tokens i
 
 ## Screenshots
 
-![Alt text](relative/path/to/Untitled.png?raw=true "Title")
+![Screenshot](Untitled.png)
 
 ## Security Vulnerabilities
 
