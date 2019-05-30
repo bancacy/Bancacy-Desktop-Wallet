@@ -112,7 +112,7 @@
   import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
 
   export default {
   	name: 'Send',
@@ -129,7 +129,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 5000000,
+        sendGasAmount: 180135,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -224,9 +224,9 @@
         this.$refs.Rate.style="color: green;"
         this.$refs.Daily.style="color:green;"
         this.$refs.Total.style="color: green;"
-        this.$refs.Rate.textContent = "INTEREST RATE : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) *100 +"%";
-        this.$refs.Daily.textContent = "DAILY TOKENS INCOME : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount / 365 +" BNY";
-        this.$refs.Total.textContent = "TOTAL TOKENS EAREND : " +  ((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount  +" BNY";
+        this.$refs.Rate.textContent = "INTEREST RATE : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) *100).toLocaleString() +"%";
+        this.$refs.Daily.textContent = "DAILY TOKENS INCOME : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount / 365).toLocaleString() +" BNY";
+        this.$refs.Total.textContent = "TOTAL TOKENS EAREND : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount).toLocaleString()  +" BNY";
       },
 
       verify: async function () {
@@ -256,6 +256,9 @@
             return;
           } else if(sendAmount < 0) {
             alert('You must choose an amount to send.');
+            return;
+          } else if(sendAmount < 12000000) {
+            alert('Minimum amount for Passive Income is 12,000,000.');
             return;
           } else if(web3.utils.sha3(password) != storedPassword) {
             alert('Invalid password.');

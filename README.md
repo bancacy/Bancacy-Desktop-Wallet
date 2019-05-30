@@ -15,10 +15,11 @@ This wallet is exclusive to Bancacy tokens, you can't load other ERC-20 tokens i
 
 ## Screenshots
 
+![Screenshot](Untitled.png)
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within the wallet, please send a note to AndyPuppyZ via issues and comments. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within the wallet, please send a note to Lunamonkey via issues and comments. All security vulnerabilities will be promptly addressed.
 
 ## License
 

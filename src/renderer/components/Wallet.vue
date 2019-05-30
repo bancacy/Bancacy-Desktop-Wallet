@@ -4,16 +4,16 @@
 
     <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
       <div>
-        1 {{ tokenTicker }} = {{ tokenPrice }} USD
+        1 {{ tokenTicker }} = {{ "Not Tradable Yet" }}
       </div>
       <div class="flex items-center">
         <div class="mr-12">
           <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ (tokenBalance) }} {{ tokenTicker }}</p>
+          <p class="text-lg leading-none">{{ (tokenBalance.toLocaleString()) }} {{ tokenTicker }}</p>
         </div>
         <div>
           <p class="text-xs text-center uppercase leading-normal">Value</p> 
-          <p class="text-lg leading-none">${{ tokenValue }} USD</p>
+          <p class="text-lg leading-none">{{ "Not Tradable Yet" }} </p>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
-              
+                
             </tr>
             <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingIN in pendingINVS" @click="open(pendingIN.key)">
               <td width="40" height="50" class="px-2" style="vertical-align: middle;">
@@ -124,7 +124,7 @@
               <td>
                 <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
               </td>
-              <td>{{ transaction.ID }}</td>
+              <td>{{transaction.ID }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction.key }}
@@ -235,7 +235,7 @@
   import Invest from './Invest';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
 
   export default {
   	name: 'Wallet',
@@ -488,6 +488,7 @@
                     let transactionFrom = listIN.returnValues._from;
                     let transactionAmount = listIN.returnValues._investmentValue;
                     let transactionID = listIN.returnValues._ID;
+                   
 
                     if(pendingINVS.includes(listIN.transactionHash)) {
                       this.pendingINVS = this.pendingINVS.filter((tx) => {return tx.key != listIN.transactionHash});
@@ -501,7 +502,8 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                        ID: transactionID
+                        ID: transactionID,
+                       
                       };
 
                       this.completedINVS = [completedIN].concat(this.completedINVS);
@@ -596,6 +598,19 @@
 
         this.$electron.shell.openExternal(url);
       },
+InvestmentUnlockTime: function (ID) {
+		    ID = ID - 1; console.log(ID);
+let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
+ console.log(result);
+});
+
+
+ 
+
+      },
+
+
 
 
       ClaimInvestment: function (ID) {
@@ -604,7 +619,7 @@ ID = ID - 1; console.log(ID);
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
-contract.methods.InvestmentStatus(ID).call().then((result) =>  { 
+contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
  if(!result){
     const storedPassword =  localStorage.getItem('passwordEncrypted');
    
@@ -615,8 +630,8 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '3000000',
-              gasPrice: '1000000000',
+              gas: '155069',
+              gasPrice: '10',
               data: data
             };
             // Send the transaction.console.log(balance);
@@ -656,8 +671,8 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '3000000',
-              gasPrice: '1000000000',
+              gas: '95069',
+              gasPrice: '10',
               data: data
             };
             // Send the transaction.console.log(balance);
