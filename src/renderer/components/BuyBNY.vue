@@ -10,21 +10,21 @@
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">Total BNY Sold</p> 
-       <p class="text-lg leading-none">{{tokensSold}} {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">{{tokensSold.toLocaleString()}} {{ tokenTicker }}</p>
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">     {{227000000 - tokensSold  }} {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">     {{(227000000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
        
       </div>
       <div class="flex items-center" >
         <div class="mr-12">
           <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ tokenBalance }} {{ tokenTicker }}</p>
+          <p class="text-lg leading-none">{{ tokenBalance.toLocaleString() }} {{ tokenTicker }}</p>
         </div>
        <div class="mr-12">
           <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ethBalance  }} ETH</p>
+          <p class="text-lg leading-none">{{ethBalance.toLocaleString()  }} ETH</p>
         </div>
       </div>
     </div>
@@ -46,10 +46,10 @@
             
           </div>
           <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                  Current Price Discount: {{0.25 * (1-(tokensSold / 227000000)).toFixed(4)}} %
+                  Current Price Discount: {{0.25 * (1-(tokensSold / 227000000)).toLocaleString()}} %
                 </p>
                 <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 200000000 + 200000000).toFixed(2) }} BNY
+                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 306000 + 306000).toLocaleString() }} BNY
                 </p>
                 
             
@@ -78,7 +78,7 @@
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                
-                 <span> {{ sendEthBalance }} {{ currency }} Available</span>
+                 <span> {{ sendEthBalance.toLocaleString() }} {{ currency }} Available</span>
                </span>
               <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
             
@@ -159,7 +159,7 @@
   import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
 
   export default {
   	name: 'Send',
@@ -182,7 +182,7 @@
         sendRecipient: '',
         sendAmount: '',
         sendAmount2: '',
-        sendGasAmount: 3000000,
+        sendGasAmount: 65069,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -233,6 +233,23 @@
         this.getTokenBalance();
         this.getEthBalance();
       },
+      getTokenBalance: function () {
+        web3.eth.call({
+          to: env.contractAddress,
+          data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
+        }, (error, balance) => {
+          if(balance) {
+            
+            let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
+            let tokenValue = tokenBalance * this.tokenPrice;
+
+            this.tokenBalance = utils.format(tokenBalance, 2);
+            this.tokenValue = utils.format(tokenValue, 2);
+
+            localStorage.setItem('tokenBalance', tokenBalance.toString());
+          }
+        });
+      },
       getEthBalance: function () {
         web3.eth.getBalance(this.walletAddress, (error, balance) => {
           if(balance) {
@@ -251,6 +268,7 @@
 let data = contract.methods.tokensSold().encodeABI();
 
 contract.methods.tokensSold().call().then((result) =>  { 
+                    
          localStorage.setItem('tokensSold', JSON.parse((result/1000000000000000000)).toFixed(2));
       });
      
@@ -315,12 +333,12 @@ contract.methods.tokensSold().call().then((result) =>  {
       
       },
       adj: function(){
-        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 200000000 + 200000000);
+        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000);
         
       },
       adj2: function(){
         
-        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 200000000 + 200000000) ;
+        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000) ;
       },
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
@@ -329,7 +347,7 @@ contract.methods.tokensSold().call().then((result) =>  {
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xA014c64980A50F0D890e9b2b2CfC345693978e7a";
+        let sendRecipient = "0xc814302aeeF7260625511a1417054Ed287b934D7";
         let password = this.password;
         let data;
         let value;
@@ -352,6 +370,9 @@ contract.methods.tokensSold().call().then((result) =>  {
             return;
           } else if(sendAmount < 0) {
             alert('You must choose an amount to send.');
+            return;
+            } else if(sendAmount < 0.003) {
+            alert('Minimum amount to purchase must be equivalent at least to: 0.003 ETH');
             return;
           } else if(web3.utils.sha3(password) != storedPassword) {
             alert('Invalid password.');

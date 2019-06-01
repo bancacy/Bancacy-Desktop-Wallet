@@ -38,8 +38,8 @@
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-                 <span v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
-                 <span v-else>{{ sendEthBalance }} {{ currency }} Available</span>
+                 <span v-if="currency == tokenTicker">{{ sendTokenBalance.toLocaleString() }} {{ currency }} Available</span>
+                 <span v-else>{{ sendEthBalance.toLocaleString() }} {{ currency }} Available</span>
                </span>
               <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax()">Send Max</a>
             </div>
@@ -111,7 +111,7 @@
   import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
 
   export default {
   	name: 'Send',
@@ -128,7 +128,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 3000000,
+        sendGasAmount: 55069,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -251,10 +251,10 @@
           // Format the gas price.
           sendGasPrice = sendGasPrice * 1.0e9;
           // Format the send amount.
-          
+           sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
           if(this.currency == 'ETH') {
-            sendAmount = utils.ethToWei(sendAmount);
+            
             data = '0x';
             value = sendAmount;
           } else {
