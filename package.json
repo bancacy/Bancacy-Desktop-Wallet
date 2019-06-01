@@ -6,10 +6,12 @@
     "type": "git",
     "url": "git://github.com/bancacy/Bancacy-Desktop-Wallet"
   },
-  "description": "BANCACY Desktop Wallet - Pink Edition",
+  "description": "BANCACY Desktop Wallet",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
+    "elec": "./node_modules/.bin/electron-rebuild.cmd",
+		"elec:mac": "$(npm bin)/electron-rebuild",
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
@@ -69,7 +71,7 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "ajv": "^5.0.0",
+    "ajv": "^6.9.1",
     "babel-core": "6.26.3",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
