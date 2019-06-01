@@ -2,7 +2,7 @@
 
 ## Bancacy Desktop Wallet
 
-Bancacy is happy to provide a public test version with an easy to use, cross-platform, secure desktop wallet for sending, receiving, investing and storing your BNY/XBNY Tokens. This software is provided with no warrenty and should be used for experimental purposes only. 
+Bancacy is happy to provide a public test version with an easy to use, cross-platform, secure desktop wallet for sending, receiving, investing and storing your BNY/XBNY Tokens. This software is provided with no warranty and should be used for experimental purposes only. 
 
 ## Features Include
 
@@ -15,7 +15,7 @@ This wallet is exclusive to Bancacy tokens, you can't load other ERC-20 tokens i
 
 ## Screenshots
 
-![Screenshot](Untitled.png)
+![Screenshot](./docs/img/summary.png)
 
 ## Security Vulnerabilities
 
@@ -23,11 +23,9 @@ If you discover a security vulnerability within the wallet, please send a note t
 
 ## License
 
-The web wallet is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The web wallet uses open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Developers
-
-Using Visual Studio, open the Solution and run
 
 npm install
 ------
