@@ -77,14 +77,14 @@
 
 <script>
   import env from './../common/Environment';
+  import utils from './../common/Utilities'
   import ClipboardJS from 'clipboard';
   import {keystore} from 'eth-lightwallet';
-  import Web3 from 'web3';
   import {AES} from 'crypto-js';
 
   new ClipboardJS('#seed');
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Create',

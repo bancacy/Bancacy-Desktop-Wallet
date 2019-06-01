@@ -7,7 +7,7 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 style="margin-left: 270px;" class="mb-2">Send {{ currency }}</h3>
+            <h3 class="mb-2">Send {{ currency }}</h3>
             <div class="inline-flex"> 
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
@@ -92,7 +92,6 @@
           <button 
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            style="margin-top: 5px;margin-left: 250px;" 
             @click="verify"
           >Send Transaction <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
           </button>
@@ -108,10 +107,9 @@
   import utils from './../common/Utilities';
   import env from './../common/Environment';
   import walletKeystore from './../common/Keystore';
-  import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Send',

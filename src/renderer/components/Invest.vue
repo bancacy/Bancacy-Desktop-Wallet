@@ -7,7 +7,7 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3  style="margin-left: 270px;" class="mb-2">Invest {{ currency }}</h3>
+            <h3 class="mb-2">Invest {{ currency }}</h3>
 
             <div class="inline-flex">
               <button 
@@ -24,7 +24,6 @@
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
             ref="ShortTerm"
-            style="margin-top: 50px;" 
             @click="ShortTerm" 
           >Short-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
           
@@ -34,38 +33,38 @@
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
             ref="MidTerm"
-            style="margin-top: 50px;margin-left:130px;" 
             @click="MidTerm"
           >Mid-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
         </button>
         <button            
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            ref="LongTerm"
-            style="margin-top: 50px;margin-left:130px;" 
+            ref="LongTerm" 
             @click="LongTerm"
           >Long-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
         </button>
         <p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <div class="flex justify-between">
-              <label style="margin-top: 30px;" ref="WMQ" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"  ></label>
-              <span style="margin-top: 30px;" ref="IR" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"></span>
+              <label ref="WMQ" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"  ></label>
+              <span ref="IR" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"></span>
             </div>
             <div class="flex">
               <div class="w-1/3">
-                <input  ref="TermInput" style="visibility:hidden;" 
+                <input  ref="TermInput" 
                   type="text" 
                   class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-                  @change= "updateOnInput()"     @input  =   "updateOnInput()" @click  =   "updateOnInput()" 
+                  @change="updateOnInput()"
+                  @input="updateOnInput()"
+                  @click="updateOnInput()" 
                 >
               </div>
               <div class="w-1/3">
                 <div class="inline-flex">
-                  <button ref="TermUpInput" style="visibility:hidden;"  class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractTerm()">
+                  <button ref="TermUpInput" class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractTerm()">
                     <i class="fas fa-chevron-circle-down"></i>
                   </button>
-                  <button ref="TermDownInput" style="visibility:hidden;"  class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addTerm()">
+                  <button ref="TermDownInput" class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addTerm()">
                     <i class="fas fa-chevron-circle-up"></i>
                   </button>
                 </div>
@@ -76,13 +75,7 @@
                 </p>
               </div>
             </div>
-                <p> &nbsp;<p>
-                 
-              
-              
             <div class="flex justify-between">
-            
-            
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label> 
               <span  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                  <span  v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
@@ -100,7 +93,6 @@
               v-model="sendAmount"
             >
           </div>
-          <p> &nbsp;<p><p> &nbsp;<p><p> &nbsp;<p>
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Investing Gas Fee</label>
@@ -145,7 +137,6 @@
           <button  
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            style="margin-top: 5px;margin-left: 230px;" 
             @click="verify"
           >Send Investment <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
           </button>
@@ -161,10 +152,9 @@
   import utils from './../common/Utilities';
   import env from './../common/Environment';
   import walletKeystore from './../common/Keystore';
-  import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Send',
@@ -318,15 +308,10 @@
         
       },
       ShortTerm: function () {  
-          this.$refs.ShortTerm.style="background-color: #F00;margin-top: 50px;" 
-          this.$refs.MidTerm.style="margin-left:130px;"
-          this.$refs.LongTerm.style="margin-left:130px;"       
+            
           this.$refs.WMQ.textContent = "Weeks";
           this.$refs.IR.textContent = "Interest rate : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)*100* this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.TermDownInput.style = "visibility:visble;";
-          this.$refs.TermUpInput.style = "visibility:visble;";
-          this.$refs.TermInput.style = "visibility:visble;";
-          
+
           if(this.$refs.WMQ.textContent == "Weeks"){
          
           this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
@@ -342,14 +327,10 @@
       
       },
       MidTerm: function () {
-          this.$refs.MidTerm.style="background-color: #F00;margin-left:130px;margin-top: 50px;"
-          this.$refs.LongTerm.style="margin-left:130px;"
-          this.$refs.ShortTerm.style="margin-top: 50px;"
+          
           this.$refs.WMQ.textContent = "Months";
           this.$refs.IR.textContent = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 ) *100 * this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.TermDownInput.style = "visibility:visble;";
-          this.$refs.TermUpInput.style = "visibility:visble;";
-          this.$refs.TermInput.style = "visibility:visble;";
+  
           if(this.$refs.WMQ.textContent == "Weeks"){
          
           this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
@@ -366,14 +347,9 @@
       },
       LongTerm: function () {
 
-          this.$refs.LongTerm.style="background-color: #F00;margin-left:130px;margin-top: 50px;"
-          this.$refs.MidTerm.style="margin-left:130px;"
-          this.$refs.ShortTerm.style="margin-top: 50px;"       
           this.$refs.WMQ.textContent = "Quaters";
           this.$refs.IR.textContent = "Interest rate : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032 *100 * this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.TermDownInput.style = "visibility:visble;" ;
-          this.$refs.TermUpInput.style = "visibility:visble;";
-          this.$refs.TermInput.style = "visibility:visble;";
+
           if(this.$refs.WMQ.textContent == "Weeks"){
          
           this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();

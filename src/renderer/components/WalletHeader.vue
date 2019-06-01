@@ -29,11 +29,12 @@
           <i class="fa fa-money-bill-alt"></i>
            Buy BNY
         </a>
-        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"style="margin-left: 0px;">
+        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"
+       >
           <i class="fa fa-percent"></i>
            Pasive Income
         </a>
-        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-grey-dark" style="margin-top: 15px; color: #C0C0C0">
+        <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-grey-dark">
           <i class="fa fa-exchange-alt"></i>
           Asset Solidification
         </a>
@@ -43,7 +44,7 @@
       <a 
         href="#" 
         class="inline-block text-sm px-4 py-2 mr-2 leading-none border border-brand-dark rounded text-brand-light hover:border-white hover:text-white no-underline bg-brand-dark" 
-        @click="navigate('Settings')"style="margin-top:px;"
+        @click="navigate('Settings')"
       >
         <i class="fa fa-cog"></i>
         

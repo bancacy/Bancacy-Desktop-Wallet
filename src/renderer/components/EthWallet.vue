@@ -71,10 +71,9 @@
   import env from './../common/Environment';
   import utils from './../common/Utilities';
   import _ from 'lodash';
-  import Web3 from 'web3';
   import axios from 'axios';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Wallet',

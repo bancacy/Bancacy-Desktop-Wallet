@@ -32,8 +32,8 @@
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
-            <h3 style="margin-left: 270px;"  class="mb-2">Buy BNY</h3>
-            <div style="margin-top: 50px;" class="inline-flex">
+            <h3 class="mb-2">Buy BNY</h3>
+            <div class="inline-flex">
               
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
@@ -55,7 +55,7 @@
             
            
           <div>
-          <div style="margin-top: 40px;" class="flex justify-between">
+          <div class="flex justify-between">
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">BNY Amount To Buy</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                  
@@ -71,10 +71,8 @@
               :placeholder= 'tokenTicker'
               v-model="sendAmount2" @Change="adj2()" @input="adj2()" @click="adj2()"
             >
-              <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-              
-                </p>
-            <div style="margin-top: 40px;" class="flex justify-between">
+
+            <div class="flex justify-between">
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                
@@ -135,12 +133,11 @@
               
             >
           </div>
-          <span  style="margin-top: 50px;margin-left: 230px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying:  {{sendAmount2}} BNY</span>
-          <span  style="margin-left: 260px;"class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{sendAmount}} ETH</span>
+          <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying:  {{sendAmount2}} BNY</span>
+          <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{sendAmount}} ETH</span>
           <button 
             type="button" 
             class="focus:outline-none  bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            style="margin-top: 5px;margin-left: 250px;" 
             @click="verify"
           >Buy BNY <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>  
           </button>
@@ -156,10 +153,9 @@
   import utils from './../common/Utilities';
   import env from './../common/Environment';
   import walletKeystore from './../common/Keystore';
-  import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Send',
@@ -311,10 +307,6 @@ contract.methods.tokensSold().call().then((result) =>  {
         this.sendGasFee = utils.format(sendGasEth * this.sendGasAmount);
         this.sendGasCost = utils.format(this.sendGasFee * this.ethPrice, 2);
       },
-     
-      
-
-
       sendMax: function () {
         if(this.currency == 'ETH') {
           this.sendAmount = this.sendEthBalance;

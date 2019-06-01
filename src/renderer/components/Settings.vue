@@ -25,7 +25,7 @@
 <script>
   import WalletHeader from './WalletHeader';
   import ButtonMenu from './settings/ButtonMenu';
-    import env from './../Common/Environment';
+    import env from './../common/Environment';
   export default {
   	name: 'Settings',
     components: { WalletHeader, ButtonMenu },

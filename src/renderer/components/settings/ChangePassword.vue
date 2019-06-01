@@ -38,7 +38,6 @@
             <button 
               type="button" 
               class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-              style="margin-top: 5px;" 
               @click="changePassword()"
             >Update
             </button>

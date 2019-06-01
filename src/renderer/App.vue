@@ -12,5 +12,5 @@
 
 <style>
   @import url('~@/assets/css/tailwind.css');
-  @import url('~@/assets/css/fontawesome.css');
+  @import url('~@/assets/css/all.css');
 </style>

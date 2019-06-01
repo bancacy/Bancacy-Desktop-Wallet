@@ -130,13 +130,13 @@
                 {{ transaction.key }}
                 <td><button 
             type="button"
-             ref="TermDownInput" style="visibility:visble;"
+             ref="TermDownInput"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
             
             @click="ClaimInvestment(transaction.ID)"
           >CLAIM 
           </button></td>
-              </td>
+             
             </tr>
           </table>
         </div>
@@ -209,12 +209,12 @@
                 {{ transaction2.key }}
                 <td><button 
             type="button"
-             ref="TermDownInput" style="visibility:visble;"
+             ref="TermDownInput"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
             @click="ClaimPassiveIncome(transaction2.ID)"
             
           >CLAIM 
-          </button></td>
+          </button>
               </td>
             </tr>
           </table>
@@ -230,12 +230,11 @@
   import env from './../common/Environment';
   import utils from './../common/Utilities';
   import _ from 'lodash';
-  import Web3 from 'web3';
   import axios from 'axios';
   import Invest from './Invest';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = utils.web3();
 
   export default {
   	name: 'Wallet',
