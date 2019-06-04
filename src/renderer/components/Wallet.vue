@@ -97,7 +97,7 @@
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">INDEX   </th>
+              <th class="text-xs text-left font-semibold uppercase">Realese-Date   </th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
@@ -124,7 +124,7 @@
               <td>
                 <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
               </td>
-              <td>{{transaction.ID }}</td>
+              <td>{{formatTimestamp(transaction.UnlockTime) }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction.key }}
@@ -176,7 +176,7 @@
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">INDEX   </th>
+              <th class="text-xs text-left font-semibold uppercase">Unlock-Date   </th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
@@ -203,7 +203,7 @@
               <td>
                 <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction2.amount) }}</span>
               </td>
-              <td></td>
+              <td>{{formatTimestamp(transaction2.UnlockTime2) }}</td>
               <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction2.key }}
@@ -211,7 +211,7 @@
             type="button"
              ref="TermDownInput" style="visibility:visble;"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            @click="ClaimPassiveIncome(transaction2.ID)"
+            @click="ClaimPassiveIncome(transaction2.ID2)"
             
           >CLAIM 
           </button></td>
@@ -235,7 +235,8 @@
   import Invest from './Invest';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+
 
   export default {
   	name: 'Wallet',
@@ -488,6 +489,7 @@
                     let transactionFrom = listIN.returnValues._from;
                     let transactionAmount = listIN.returnValues._investmentValue;
                     let transactionID = listIN.returnValues._ID;
+                    let transactionUnlock = listIN.returnValues._unlocktime;
                    
 
                     if(pendingINVS.includes(listIN.transactionHash)) {
@@ -502,7 +504,9 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                        ID: transactionID,
+                        UnlockTime: transactionUnlock,
+                        ID: transactionID
+                  
                        
                       };
 
@@ -543,7 +547,8 @@
                     let transactionHash = listPS.transactionHash;
                     let transactionFrom = listPS.returnValues._investor2;
                     let transactionAmount = listPS.returnValues._investmentValue2;
-                   let transactionID2 = listPS.returnValues._ID;
+                   let transactionID2 = listPS.returnValues._ID2;
+                   let transactionUnlock = listPS.returnValues._unlocktime2;
 
                     if(pendingPSVS.includes(listPS.transactionHash)) {
                       this.pendingPSVS = this.pendingPSVS.filter((tx) => {return tx.key != listPS.transactionHash});
@@ -557,7 +562,8 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                        ID: transactionID2
+                        ID2: transactionID2,
+                        UnlockTime2: transactionUnlock,
                       };
 
                       this.completedPSVS = [completedPS].concat(this.completedPSVS);
@@ -583,6 +589,7 @@
       formatTimestamp: function (timestamp) {
         return utils.formatTime(timestamp);
       },
+      
 
       formatAmount: function (amount) {
 		    amount = amount || 0;
@@ -671,8 +678,8 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '95069',
-              gasPrice: '10',
+              gas: '6905069',
+              gasPrice: '100',
               data: data
             };
             // Send the transaction.console.log(balance);

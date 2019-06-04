@@ -74,7 +74,8 @@
   import Web3 from 'web3';
   import axios from 'axios';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+
 
   export default {
   	name: 'Wallet',
@@ -164,7 +165,7 @@
 
 
 		if(supplier== "blockcypher"){
-			axios.get('http://api.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+			axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - txrefs and tx_hash
 					let listTxs = _.uniqBy(response.data.txrefs, 'tx_hash');
@@ -223,7 +224,7 @@
 		if (supplier == "etherscan") {
 			//console.log("before response")
 			//console.log(this)
-			axios.get('http://api.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+		axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - result and hash
 					//console.log("in response")

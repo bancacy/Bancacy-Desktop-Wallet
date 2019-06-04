@@ -112,7 +112,8 @@
   import Web3 from 'web3';
   import {sign} from 'ethjs-signer';
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+
 
   export default {
   	name: 'Send',
@@ -129,7 +130,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 180135,
+        sendGasAmount: 210135,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,

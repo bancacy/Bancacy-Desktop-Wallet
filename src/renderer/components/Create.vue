@@ -84,7 +84,8 @@
 
   new ClipboardJS('#seed');
 
-  const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/' + env.infuraApiKey));
+  const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/' + env.infuraApiKey));
+
 
   export default {
   	name: 'Create',
