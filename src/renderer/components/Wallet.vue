@@ -563,7 +563,7 @@
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
                         ID2: transactionID2,
-                        UnlockTime2: transactionUnlock,
+                        UnlockTime2: transactionUnlock
                       };
 
                       this.completedPSVS = [completedPS].concat(this.completedPSVS);
@@ -678,7 +678,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '6905069',
+              gas: '6505069',
               gasPrice: '100',
               data: data
             };
