@@ -378,7 +378,7 @@
                 listINVS.push(INV[s]);
               }
             }
-            let PSV = await contract.getPastEvents('Deposit2', { filter: {_investor2: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
+            let PSV = await contract.getPastEvents('PassiveDeposit', { filter: {_investor2: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(PSV.length > 0) {
               PSV = _.uniqBy(PSV, 'transactionHash');
               for(let w = 0; w < PSV.length; w++) {
