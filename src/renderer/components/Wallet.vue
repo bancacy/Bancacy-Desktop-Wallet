@@ -622,7 +622,7 @@ contract.methods.InvestmentStatus(ID).call().then((result) =>  {
 
       ClaimInvestment: function (ID) {
         
-ID = ID - 1; console.log(ID);
+
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
@@ -663,7 +663,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
 
       ClaimPassiveIncome: function (ID) {
         
-ID = ID - 1;
+
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releasePasiveIncome(ID).encodeABI();
 let pass = this.password;
