@@ -9,7 +9,7 @@
           <div class="flex justify-between">
             <h3 class="mb-2">Invest {{ currency }}</h3>
 
-            <div class="inline-flex">
+            <!-- <div class="inline-flex">
               <button 
                 class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
                 :class="currency == tokenTicker ? 'bg-grey-light' : 'bg-grey-lightest'"
@@ -18,45 +18,55 @@
                 {{ tokenTicker }}
               </button>
               
-            </div>
+            </div> -->
           </div>
+
+        <div class="flex flex-row justify-between items-center">
+
+        <label class=" block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Choose an investment period:</label>
+
         <button 
             type="button" 
-            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
+            class="focus:outline-none hover:bg-orange-dark text-white py-3 px-6 rounded"
+            :class="termSelected == terms.short ? 'bg-green' : 'bg-orange'"
             ref="ShortTerm"
-            @click="ShortTerm" 
+            @click="selectTerm('short')" 
           >Short-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
           
         </button>
         
         <button 
             type="button" 
-            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            ref="MidTerm"
-            @click="MidTerm"
+            class="focus:outline-none hover:bg-orange-dark text-white py-3 px-6 rounded"
+            :class="termSelected == terms.mid ? 'bg-green' : 'bg-orange'"
+            @click="selectTerm('mid')"
           >Mid-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
         </button>
         <button            
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            ref="LongTerm" 
-            @click="LongTerm"
+            :class="termSelected == terms.long ? 'bg-green' : 'bg-orange'" 
+            @click="selectTerm('long')"
           >Long-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
         </button>
-        <p> &nbsp;<p><p> &nbsp;<p>
-          <div>
+        
+        </div>
+
+
+          <div v-if="termSelected != ''">
             <div class="flex justify-between">
-              <label ref="WMQ" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"  ></label>
-              <span ref="IR" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"></span>
+              <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{termSelected}}</label>
+              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{interestRate}}</span>
             </div>
             <div class="flex">
               <div class="w-1/3">
-                <input  ref="TermInput" 
+                <input ref="TermInput" 
                   type="text" 
                   class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-                  @change="updateOnInput()"
-                  @input="updateOnInput()"
-                  @click="updateOnInput()" 
+                  @change="updateFormValues()"
+                  @input="updateFormValues()"
+                  @click="updateFormValues()"
+                  v-model="termInput"
                 >
               </div>
               <div class="w-1/3">
@@ -70,8 +80,8 @@
                 </div>
               </div>
               <div class="w-1/3">
-                <p ref="netInterts"  class="text-xs uppercase text-right text-green text-xs font-bold" >
-                  
+                <p class="text-xs uppercase text-right text-green text-xs font-bold" >
+                  {{earnings}}
                 </p>
               </div>
             </div>
@@ -93,7 +103,9 @@
               v-model="sendAmount"
             >
           </div>
-          <div>
+
+
+          <div v-if="termSelected != ''">
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Investing Gas Fee</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
@@ -122,8 +134,10 @@
                 </p>
               </div>
             </div>
-          </div><p> &nbsp;<p><p> &nbsp;<p>
-          <div>
+          </div>
+          
+          
+          <div v-if="termSelected != ''">
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
               type="password" 
@@ -134,8 +148,8 @@
             
           </div>
           
-          <button  
-            type="button" 
+          <button  v-if="termSelected"  
+            type="button"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
             @click="verify"
           >Send Investment <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
@@ -179,8 +193,23 @@
         sendGas: 10,
         loading: false,
         totalDeposit2: '0',
-        totalsupply2: '0',
-        error: []
+        totalsupply: '0',
+        error: [],
+        termSelected : '',
+        terms : {
+          short : 'Weeks',
+          mid : 'Months',
+          long : 'Quarters'
+        },
+        termInput : '',
+        interestRateText : '',
+        interestRate : 0,
+        rates : {
+          short : 0.0016,
+          mid : 0.008,
+          long : 0.032
+        },
+        earnings : ''
       
   		}
   	},
@@ -209,13 +238,13 @@
         let ethBalance    = await localStorage.getItem('ethBalance');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
         let totalDeposit2  = await localStorage.getItem('totalDeposit2');
-        let totalsupply2  = await localStorage.getItem('Rate2');
+        let totalsupply  = await localStorage.getItem('totalSupply');
          
         this.ethPrice = ethPrice;
         this.sendEthBalance = ethBalance;
         this.sendTokenBalance = tokenBalance;
-         this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
-          this.totalsupply2   = totalsupply2 != null ? parseFloat(totalsupply2) : '0';
+        this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
+        this.totalsupply   = totalsupply != null ? parseFloat(totalsupply) : '0';
         this.getEthPrice();
         
       },
@@ -231,7 +260,7 @@
           }).catch(error => {console.log(error)});
           let contract = new web3.eth.Contract(env.abi, env.contractAddress);
         contract.methods.totalSupply().call().then((result) =>  { 
-         localStorage.setItem('Rate2', JSON.parse((result/1000000000000000000)).toFixed(2));  
+         localStorage.setItem('totalSupply', JSON.parse((result/1000000000000000000)).toFixed(2));  
       })
       contract.methods.balanceOf('0x0000000000000000000000000000000000000000').call().then((result) =>  { 
          localStorage.setItem('totalDeposit2', JSON.parse((result/1000000000000000000)).toFixed(2));
@@ -273,109 +302,23 @@
 
       },
       addTerm: function () {
-        this.$refs.TermInput.value ++;
-        if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " +(((1 - this.totalDeposit2/this.totalsupply2) * 0.0016) *100* this.$refs.TermInput.value).toLocaleString() + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          this.$refs.IR.textContent = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )  *100  * this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )      * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032 * 100   * this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.netInterts.textContent = "BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }       
-          
+        this.termInput++;
+        this.updateFormValues();  
       },
-
       subtractTerm: function () {
-        if(this.$refs.TermInput.value >0){
-        this.$refs.TermInput.value --;
+        if(this.termInput >0){
+          this.termInput --;
         }
-         if(this.$refs.WMQ.textContent == "Weeks"){
-          this.$refs.IR.textContent = "Interest rate : " + (((1 - this.totalD54eposit2/this.totalsupply2) * 0.0016) *100* this.$refs.TermInput.value).toLocaleString() + "%";
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)   * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          this.$refs.IR.textContent = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )  *100* this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " +  ((((1 - this.totalDeposit2/this.totalsupply2) * 0.008 ))    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-          this.$refs.IR.textContent = "Interest rate : " +  ((1 - this.totalDeposit2/this.totalsupply2) *0.032 * 100   * this.$refs.TermInput.value).toLocaleString()+"%";
-          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-        
+        this.updateFormValues();
       },
-      ShortTerm: function () {  
-            
-          this.$refs.WMQ.textContent = "Weeks";
-          this.$refs.IR.textContent = "Interest rate : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)*100* this.$refs.TermInput.value).toLocaleString()+"%";
-
-          if(this.$refs.WMQ.textContent == "Weeks"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          
-          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032   * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-      
+      selectTerm: function (term) {  
+        this.termSelected = this.terms[term];
+        this.interestRate = this.rates[term];
+        this.updateFormValues();
       },
-      MidTerm: function () {
-          
-          this.$refs.WMQ.textContent = "Months";
-          this.$refs.IR.textContent = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 ) *100 * this.$refs.TermInput.value).toLocaleString()+"%";
-  
-          if(this.$refs.WMQ.textContent == "Weeks"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          
-          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          
-      },
-      LongTerm: function () {
-
-          this.$refs.WMQ.textContent = "Quaters";
-          this.$refs.IR.textContent = "Interest rate : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032 *100 * this.$refs.TermInput.value).toLocaleString()+"%";
-
-          if(this.$refs.WMQ.textContent == "Weeks"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          
-          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-      },
-      updateOnInput:function(){
-         if(this.$refs.WMQ.textContent == "Weeks"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + (((1 - this.totalDeposit2/this.totalsupply2) * 0.0016)  * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-        }
-          if(this.$refs.WMQ.textContent == "Months"){
-          
-          this.$refs.netInterts.textContent ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.008 )    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
-          if(this.$refs.WMQ.textContent == "Quaters"){
-         
-          this.$refs.netInterts.textContent ="BNY earned : " + ((1 - this.totalDeposit2/this.totalsupply2) *0.032    * this.$refs.TermInput.value * this.$refs.AmountToken.value).toLocaleString();
-          }
+      updateFormValues:function(){
+        this.interestRateText = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate ) *100 * this.termInput).toLocaleString()+"%";
+        this.earnings ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate )    * this.termInput * this.amountToken).toLocaleString();
       },
      
       verify: async function () {
@@ -385,7 +328,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xA014c64980A50F0D890e9b2b2CfC345693978e7a";
+        let sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;
         let password = this.password;
         let data;
         let value;
@@ -421,26 +364,23 @@
             
             data = '0x';
             value = sendAmount;
-          } else {
+          } 
+          else {
             let contract = new web3.eth.Contract(env.abi, env.contractAddress);
             if(this.$refs.WMQ.textContent == "Weeks"){
-            var  term123 = 1;
-            var  unlockTime = this.$refs.TermInput.value  * 604800 ;
+              var term123 = 1;
+              var unlockTime = this.$refs.TermInput.value  * 604800 ;
             }
-           if(this.$refs.WMQ.textContent == "Months"){
-          var  term123 = 2 ;
-          var  unlockTime = this.$refs.TermInput.value  * 2419200 ;
-           }
-           if(this.$refs.WMQ.textContent == "Quaters"){
-           var  term123 = 3;
-            var unlockTime = this.$refs.TermInput.value  * 7257600 ;
-           }
-         
-         
+            if(this.$refs.WMQ.textContent == "Months"){
+              var term123 = 2 ;
+              var unlockTime = this.$refs.TermInput.value  * 2419200 ;
+            }
+            if(this.$refs.WMQ.textContent == "Quarters"){
+              var term123 = 3;
+              var unlockTime = this.$refs.TermInput.value  * 7257600 ;
+            }
 
-       
-        
-            data = contract.methods.investment(unlockTime,sendAmount, term123).encodeABI();
+            data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
             // Change the recipient to be the token contract address.
             sendRecipient = env.contractAddress;
             value = 0;

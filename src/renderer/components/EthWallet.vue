@@ -68,7 +68,7 @@
 	</div>
 </template>
 <script>import WalletHeader from './WalletHeader'
-  import env from './../common/Environment';
+  import env, {MAINNET} from './../common/Environment';
   import utils from './../common/Utilities';
   import _ from 'lodash';
   import axios from 'axios';
@@ -161,68 +161,11 @@
 		// BLOCK CYPHER SPECIFIC
 		let supplier = "etherscan";
 
-
-		if(supplier== "blockcypher"){
-			axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
-				.then(response => {
-					// API NODE  - txrefs and tx_hash
-					let listTxs = _.uniqBy(response.data.txrefs, 'tx_hash');
-
-					if (listTxs != undefined && listTxs.length > 0) {
-						let lastTxTimestamp = 0;
-						let completedTx;
-
-						if (this.completedTxs.length > 0) {
-							lastTxTimestamp = parseInt(this.completedTxs[0].timestamp);
-						}
-
-						let tempPending = Object.values(this.pendingTxs);
-						for (var p = 0; p < tempPending.length; p++) {
-							pendingTxs.push(tempPending[p].key);
-						}
-
-						for (var j = listTxs.length - 1; j >= 0; j--) {
-
-							// API NODE  - tx_hash
-							if (pendingTxs.includes(listTxs[j].tx_hash)) {
-								// API NODE  - tx_hash
-								this.pendingTxs = this.pendingTxs.filter((tx) => { return tx.key != listTxs[j].tx_hash });
-
-								localStorage.setItem('ethPendingTxs', JSON.stringify(this.pendingTxs));
-							}
-							// API NODE  - confirmed
-							let txTimestamp = utils.getTimestamp(listTxs[j].confirmed);
-
-							if (parseInt(txTimestamp) > lastTxTimestamp) {
-
-								completedTx = {
-									// API NODE  - tx_hash
-									key: listTxs[j].tx_hash,
-									timestamp: txTimestamp.toString(),
-									// API NODE  - tx_output_n
-									from: listTxs[j].tx_output_n == '0' ? '0' : this.walletAddress,
-									// API NODE  - value
-									amount: listTxs[j].value.toString()
-								};
-
-								this.completedTxs = [completedTx].concat(this.completedTxs);
-
-								localStorage.setItem('ethCompletedTxs', JSON.stringify(this.completedTxs));
-								this.refreshing = false;
-							} else {
-								this.refreshing = false;
-							}
-						}
-					} else {
-						this.refreshing = false;
-					}
-				}).catch(error => { console.log(error) });
-		}
-		 let $this = this;
+		let $this = this;
 		if (supplier == "etherscan") {
 			//console.log("before response")
 			//console.log(this)
-		axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+			axios.get('http://' + (MAINNET ? 'api' : 'api-kovan')  + '.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - result and hash
 					//console.log("in response")
@@ -230,7 +173,7 @@
 					//console.log("response")
 					//console.log(response)
 					let listTxs = _.uniqBy(response.data.result, 'hash');
-          console.log(response.data);
+          			console.log(response.data);
 					if (listTxs != undefined && listTxs.length > 0) {
 						let lastTxTimestamp = 0;
 						let completedTx;

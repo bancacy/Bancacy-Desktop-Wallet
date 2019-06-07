@@ -32,7 +32,7 @@
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"
        >
           <i class="fa fa-percent"></i>
-           Pasive Income
+           Passive Income
         </a>
         <a href="#" class="block inline-block mt-0 text-brand-light border border-brand-dark rounded hover:text-white mr-6 no-underline hover:border-white px-4 py-2 bg-grey-dark">
           <i class="fa fa-exchange-alt"></i>

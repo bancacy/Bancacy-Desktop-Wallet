@@ -171,6 +171,7 @@
         sendEthBalance: 0,
         sendTokenBalance: 0,
         tokensSold: '0',
+        totalSupply: '0',
         ethBalance: '0',
         Rate: '0',
         totalDeposit: '0',
@@ -222,10 +223,10 @@
         this.sendTokenBalance = tokenBalance;
         this.tokenBalance = tokenBalance != null ? parseFloat(tokenBalance) : '0';
         this.tokensSold = tokensSold != null ? parseFloat(tokensSold) : '0';
-          this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
-          this.Rate   = Rate != null ? parseFloat(Rate) : '0';
-          this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
-         this.currency = "ETH";
+        this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
+        this.Rate   = Rate != null ? parseFloat(Rate) : '0';
+        this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
+        this.currency = "ETH";
         
       },
       update : function(){
@@ -267,18 +268,23 @@
       getData: function () {
         let contract = new web3.eth.Contract(env.abi, env.contractAddress);
         let data = contract.methods.tokensSold().encodeABI();
-        contract.methods.tokensSold().call().then((result) =>  {           
-          localStorage.setItem('tokensSold', JSON.parse((result/1000000000000000000)).toFixed(2));
-          //TODO:
+        contract.methods.tokensSold().call().then((result) =>  { 
+          
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('tokensSold', data);
+          this.tokensSold = data;
         });
      
         contract.methods.totalSupply().call().then((result) =>  { 
-          localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
-          //TODO: set the data
+          //localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalSupply', data);
+          this.totalSupply = data;
         })
         contract.methods.balanceOf(0x0).call().then((result) =>  { 
-          localStorage.setItem('totalDeposit', JSON.parse((result/1000000000000000000)).toFixed(2));
-          // TODO:set the data
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalDeposit', data);
+          this.totalDeposit = data;
         })
 
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
@@ -290,12 +296,10 @@
             }
           }).catch(error => {console.log(error)});
       },
-
       addGwei: function () {
         this.sendGas = this.sendGas + 1;
         this.setSendGasFee();
       },
-
       subtractGwei: function () {
         if(this.sendGas > 0) {
           this.sendGas = this.sendGas - 1;
@@ -321,18 +325,14 @@
       },
       totalforsale: function(){
         let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-        //let data = contract.methods.tokensSold().encodeABI();
-
         contract.methods.tokensSold().call().then((result) =>  { 
           localStorage.setItem('tokensSold', JSON.parse(result));
         });
       },
       adj: function(){
         this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000);
-        
       },
       adj2: function(){
-        
         this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000) ;
       },
       verify: async function () {

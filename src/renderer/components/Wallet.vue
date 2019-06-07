@@ -142,15 +142,10 @@
         </div>
       </div>
       </div>
-
-
-
-
-
-       <div class="px-3 mt-3">
+      <div class="px-3 mt-3">
       <div class="rounded-lg bg-white shadow">
         <div class="flex justify-between py-3 border-b border-grey-light">
-          <h3 class="pl-3 mt-1">Pasive Income Platform</h3>
+          <h3 class="pl-3 mt-1">Passive Income Platform</h3>
           <div>
            
             <input 
@@ -227,7 +222,7 @@
 <script>
   import walletKeystore from './../common/Keystore';
   import WalletHeader from './WalletHeader';
-  import env from './../common/Environment';
+  import env, {MAINNET} from './../common/Environment';
   import utils from './../common/Utilities';
   import _ from 'lodash';
   import axios from 'axios';
@@ -240,7 +235,6 @@
   	name: 'Wallet',
     components: { WalletHeader },
     props: [],
-
   	data() {
   		return {
         tokenTicker: env.tokenTicker,
@@ -259,11 +253,9 @@
         refreshing: false
   		}
   	},
-
   	mounted() {
       this.hasWalletAddress();
   	},
-
   	methods: {
       hasWalletAddress: async function () {
         const walletAddress = await localStorage.getItem('walletAddress');
@@ -274,7 +266,6 @@
           this.getStorageValues();
         }
       },
-
       getStorageValues: async function () {
         let tokenPrice    = await localStorage.getItem('tokenPrice');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
@@ -297,13 +288,11 @@
 
         this.updateWallet();
       },
-
       updateWallet: function () {
         this.getTokenPrice();
         this.getTokenBalance();
         this.getCompletedTxs();
       },
-
       getTokenPrice: function () {
         /*
         axios.get('https://coinlib.io/api/v1/coin?key=' + env.coinlibApiKey + '&pref=USD&symbol=' + env.tokenTicker)
@@ -322,25 +311,25 @@
             }
           }).catch(error => {console.log(error)});
       },
-
       getTokenBalance: function () {
         web3.eth.call({
-          to: env.contractAddress,
+          to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
           data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
         }, (error, balance) => {
           if(balance) {
-            
+
             let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
             let tokenValue = tokenBalance * this.tokenPrice;
-
             this.tokenBalance = utils.format(tokenBalance, 2);
             this.tokenValue = utils.format(tokenValue, 2);
 
             localStorage.setItem('tokenBalance', tokenBalance.toString());
           }
+          if(error){
+            console.error(error);
+          }
         });
       },
-
       getCompletedTxs: function () {
         this.refreshing = true;
 
@@ -365,9 +354,7 @@
               fromBlock = response - 86000;
             }
             
-            let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-            
-
+            let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
 
             let INV = await contract.getPastEvents('Deposit', { filter: {_investor: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(INV.length > 0) {
@@ -398,8 +385,6 @@
                 listTxs.push(fromTxs[j]);
               }
             }
-            
-
             listTxs.sort((a, b) => {
               return parseInt(a.blockNumber) - parseInt(b.blockNumber);
             });
@@ -461,12 +446,7 @@
               this.refreshing = false;
             } 
 
-
-
-
-
-
-             if(listINVS.length > 0) {
+            if(listINVS.length > 0) {
               let lastINVTimestamp = 0;
               let completedIN;
 
@@ -580,127 +560,96 @@
           }).catch(error => {console.log(error)});
           
       },
-
-
-      
-
       formatTimestamp: function (timestamp) {
         return utils.formatTime(timestamp);
       },
-      
-
       formatAmount: function (amount) {
 		    amount = amount || 0;
         return web3.utils.fromWei(amount.toString());
       },
-
       getTxIcon: function (from) {
         return from == this.walletAddress ? 'fa-arrow-alt-circle-up' : 'fa-arrow-alt-circle-down'
       },
-
       open: function (txHash) {
         const url = 'https://etherscan.io/tx/' + txHash;
 
         this.$electron.shell.openExternal(url);
       },
-InvestmentUnlockTime: function (ID) {
-		    ID = ID - 1; console.log(ID);
-let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
- console.log(result);
-});
-
-
- 
-
+      InvestmentUnlockTime: function (ID) {
+        //ID = ID - 1; 
+        console.log(ID);
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+        contract.methods.investmentStatus(ID).call().then((result) =>  {      
+          console.log(result);
+        });
       },
-
-
-
-
-      ClaimInvestment: function (ID) {
-        
-
-let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-let data = contract.methods.releaseInvestment(ID).encodeABI();
-let pass = this.password;
-contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
- if(!result){
-    const storedPassword =  localStorage.getItem('passwordEncrypted');
-   
-if(pass != ''){
-if(web3.utils.sha3(pass) != storedPassword) {
-            alert('Invalid password.');
-            return}
-            let transaction = {
-              to: env.contractAddress,
-              value: '0',
-              gas: '155069',
-              gasPrice: '10',
-              data: data
-            };
-            // Send the transaction.console.log(balance);
-           
-            
-          
-           return(this.send(transaction,pass));
-          
-            
-}else{
-  alert("Please enter your wallet password");
-}
-  }else alert("Investment already claimed");
-});
-
-
- 
-
-
-
-      },
-
       ClaimPassiveIncome: function (ID) {
-        
-
-let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-let data = contract.methods.releasePasiveIncome(ID).encodeABI();
-let pass = this.password;
-contract.methods.PassiveIncomeStatus(ID).call().then((result) =>  { 
- if(!result){
-    const storedPassword =  localStorage.getItem('passwordEncrypted');
-   
-if(pass != ''){
-if(web3.utils.sha3(pass) != storedPassword) {
-            alert('Invalid password.');
-            return}
-            let transaction = {
-              to: env.contractAddress,
-              value: '0',
-              gas: '6505069',
-              gasPrice: '100',
-              data: data
-            };
-            // Send the transaction.console.log(balance);
-           
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+        let data = contract.methods.releasePassiveIncome(ID).encodeABI();
+        let pass = this.password;
+        contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
+          if(!result){
+            const storedPassword =  localStorage.getItem('passwordEncrypted');
             
-          
-           return(this.send(transaction,pass));
-          
-            
-}else{
-  alert("Please enter your wallet password");
-}
-  }else alert("Investment already claimed");
-});
-
-
- 
-
-
-
+            if(pass != ''){
+              if(web3.utils.sha3(pass) != storedPassword) {
+                alert('Invalid password.');
+                return
+              }
+              let transaction = {
+                to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+                value: '0',
+                gas: '6505069',
+                gasPrice: '100',
+                data: data
+              };
+              // Send the transaction.console.log(balance);  
+              return(this.send(transaction,pass));
+            }
+            else{
+              alert("Please enter your wallet password");
+            }
+          }
+          else{
+            alert("Investment already claimed");
+          }
+        });
       },
-     
-      send: function (transaction, password) {
+      ClaimInvestment: function (ID) {
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+        let data = contract.methods.releaseInvestment(ID).encodeABI();
+        let pass = this.password;
+        contract.methods.investmentStatus(ID).call().then((result) =>  {      
+          if(!result){
+            const storedPassword =  localStorage.getItem('passwordEncrypted');
+            
+            if(pass != ''){
+              if(web3.utils.sha3(pass) != storedPassword) {
+                alert('Invalid password.');
+                return}
+                let transaction = {
+                  to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+                  value: '0',
+                  gas: '155069',
+                  gasPrice: '10',
+                  data: data
+              };
+                // Send the transaction.console.log(balance);
+              
+                
+            
+              return(this.send(transaction,pass));
+            
+              
+            }
+            else{
+              alert("Please enter your wallet password");
+            }
+          }
+          else{ alert("Investment already claimed"); }
+        });
+      },
+      send : function (transaction, password) {
         walletKeystore.load(password, (ks) => {
           ks.keyFromPassword(password, (error, pwDerivedKey) => {
             if(error) {
