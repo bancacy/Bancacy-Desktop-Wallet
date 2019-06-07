@@ -31,8 +31,7 @@
             :class="termSelected == terms.short ? 'bg-green' : 'bg-orange'"
             ref="ShortTerm"
             @click="selectTerm('short')" 
-          >Short-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
-          
+          >Short-Term
         </button>
         
         <button 
@@ -40,14 +39,14 @@
             class="focus:outline-none hover:bg-orange-dark text-white py-3 px-6 rounded"
             :class="termSelected == terms.mid ? 'bg-green' : 'bg-orange'"
             @click="selectTerm('mid')"
-          >Mid-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
+          >Mid-Term
         </button>
         <button            
             type="button" 
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
             :class="termSelected == terms.long ? 'bg-green' : 'bg-orange'" 
             @click="selectTerm('long')"
-          >Long-Term <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
+          >Long-Term
         </button>
         
         </div>
@@ -56,7 +55,7 @@
           <div v-if="termSelected != ''">
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{termSelected}}</label>
-              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{interestRate}}</span>
+              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{interestRateText}}</span>
             </div>
             <div class="flex">
               <div class="w-1/3">
@@ -95,7 +94,7 @@
             </div>
             <input 
               type="text"
-              @change= "updateOnInput()"     @input  =   "updateOnInput()" @click  =   "updateOnInput()" 
+              @change= "updateFormValues()"     @input  =   "updateFormValues()" @click  =   "updateFormValues()" 
               class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
               :placeholder="currency"
               v-model="sendAmount"
@@ -156,7 +155,7 @@
   import WalletHeader from './WalletHeader';
   import axios from 'axios';
   import utils from './../common/Utilities';
-  import env from './../common/Environment';
+  import env, {MAINNET} from './../common/Environment';
   import walletKeystore from './../common/Keystore';
   import {sign} from 'ethjs-signer';
 
@@ -209,10 +208,12 @@
     mounted() {
       this.getGasPrice();
       this.bootstrapStorage();
+      this.getEthPrice();
+      this.getData();
     },
      
   	methods: {
-       getGasPrice: function () {
+      getGasPrice: function () {
         //console.log('get gas price')
         web3.eth.getGasPrice((error, wei) => {
           if(wei) {
@@ -237,10 +238,7 @@
         this.sendTokenBalance = tokenBalance;
         this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
         this.totalsupply   = totalsupply != null ? parseFloat(totalsupply) : '0';
-        this.getEthPrice();
-        
       },
-   
       getEthPrice: function () {
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
           .then(response => {
@@ -250,48 +248,39 @@
               this.ethPrice = response.data.USD;
             }
           }).catch(error => {console.log(error)});
-          let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-        contract.methods.totalSupply().call().then((result) =>  { 
-         localStorage.setItem('totalSupply', JSON.parse((result/1000000000000000000)).toFixed(2));  
-      })
-      contract.methods.balanceOf('0x0000000000000000000000000000000000000000').call().then((result) =>  { 
-         localStorage.setItem('totalDeposit2', JSON.parse((result/1000000000000000000)).toFixed(2));
-      })
       },
-    
+      getData : function(){
+          let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+          contract.methods.totalSupply().call().then((result) =>  { 
+            localStorage.setItem('totalSupply', JSON.parse((result/1000000000000000000)).toFixed(2));  
+          })
+          contract.methods.balanceOf('0x0000000000000000000000000000000000000000').call().then((result) =>  { 
+            localStorage.setItem('totalDeposit2', JSON.parse((result/1000000000000000000)).toFixed(2));
+          })
+      },
       addGwei: function () {
         this.sendGas = this.sendGas + 1;
         this.setSendGasFee();
       },
-
       subtractGwei: function () {
         if(this.sendGas > 0) {
           this.sendGas = this.sendGas - 1;             
           this.setSendGasFee();
         }
       },
-
       setCurrency: function (currency) {
         this.currency = currency;
         this.sendAmount = '';
       },
-      
       setSendGasFee: function () {
         let sendGasEth = web3.utils.fromWei(web3.utils.toWei(this.sendGas.toString(), 'gwei'), 'ether');
 
         this.sendGasFee = utils.format(sendGasEth * this.sendGasAmount);
         this.sendGasCost = utils.format(this.sendGasFee * this.ethPrice, 2);
       },
-       
       sendMax: function () {
-        this.updateOnInput();
-        if(this.currency == 'ETH') {
-          this.sendAmount = this.sendEthBalance;
-        } else {
-          this.sendAmount = this.sendTokenBalance;
-        }
-      
-
+        this.updateFormValues();
+        this.sendAmount = parseInt(this.sendTokenBalance);
       },
       addTerm: function () {
         this.termInput++;
@@ -312,7 +301,6 @@
         this.interestRateText = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate ) *100 * this.termInput).toLocaleString()+"%";
         this.earnings ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate )    * this.termInput * this.sendAmount).toLocaleString();
       },
-     
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
 
@@ -325,6 +313,7 @@
         let data;
         let value;
 
+        console.log("sendEthBalance",sendEthBalance);
         if(sendGasPrice != '' && sendGasAmount != '' && sendAmount != '' &&  password != '') {
           
           if(sendEthBalance <= 0) {
@@ -352,32 +341,35 @@
           // Format the send amount.
           sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
-          if(this.currency == 'ETH') {
-            
-            data = '0x';
-            value = sendAmount;
-          } 
-          else {
-            let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-            if(this.selectTerm == terms.short){
-              var  term123 = 1;
-              var  unlockTime = this.termInput  * 60 ;
-            }
-            if(this.selectTerm == terms.short){
-              var  term123 = 2 ;
-              var  unlockTime = this.termInput  * 120 ;
-            }
-            if(this.selectTerm == terms.short){
-              var  term123 = 3;
-              var unlockTime = this.termInput  * 180 ;
-            }
-            data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
-            // Change the recipient to be the token contract address.
-            sendRecipient = env.contractAddress;
-            value = 0;
+          console.log("sendAmount",sendAmount);
+          let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+          let  unlockTime;
+          let  term123;
+          if(this.termSelected == this.terms.short){
+            term123 = 1;
+            unlockTime = this.termInput  * 60 ;
           }
+          if(this.termSelected == this.terms.mid){
+            term123 = 2 ;
+            unlockTime = this.termInput  * 120 ;
+          }
+          if(this.termSelected == this.terms.long){
+            term123 = 3;
+            unlockTime = this.termInput  * 180 ;
+          }
+          console.log("term123",term123)
+          console.log("unlockTime",unlockTime)
+          console.log("this.termInput",this.termInput)
+          data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
+          // Change the recipient to be the token contract address.
+          console.log("data",data)
+          sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;
+          console.log("sendRecipient",sendRecipient)
+          value = 0;
 
-          let balance = this.currency == 'ETH' ? this.sendEthBalance : this.sendTokenBalance;
+          console.log("value",value)
+          let balance = this.sendTokenBalance;
+          console.log("balance",balance)
           // Form the transaction object.
           if(this.sendAmount <= parseFloat(balance)) {
             let transaction = {
@@ -425,26 +417,12 @@
                       address: this.walletAddress
                     };
                   
-                    // Save to storage.
-                    if(this.currency == 'ETH') {
-                      let txs = await localStorage.getItem('ethPendingTxs');
+                    let txs = localStorage.getItem('tokenPendingTxs');
 
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
+                    txs = txs == null ? [] : JSON.parse(txs);
+                    txs.push(pendingTx);
 
-                      await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
-
-                    } 
-                    else {
-                  
-                      let txs = localStorage.getItem('tokenPendingTxs');
-
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
-
-                      await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
-                    }
-                    // Return to summary screen.
+                    await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
                    
                     this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
                     

@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
       <div>
       <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-       <p class="text-lg leading-none"> 227,700,000 {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
         
       </div>
        <div>
@@ -14,7 +14,7 @@
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">     {{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">{{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
        
       </div>
       <div class="flex items-center" >
@@ -33,27 +33,13 @@
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
             <h3 class="mb-2">Buy BNY</h3>
-            <div class="inline-flex">
-              
-              <button 
-                class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-r" 
-                :class="currency == tokenTicker ? 'bg-grey-lightest' : 'bg-grey-light'"
-              
-              >
-                ETH
-              </button>
-            </div>
-            
           </div>
           <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                  Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
-                </p>
-                <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                   1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
-                </p>
-                
-            
-           
+            Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
+          </p>
+          <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+              1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
+        </p>
           <div>
           <div class="flex justify-between">
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">BNY Amount To Buy</label>
@@ -76,7 +62,7 @@
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
                
-                 <span> {{ sendEthBalance.toLocaleString() }} {{ currency }} Available</span>
+                 <span> {{ sendEthBalance.toLocaleString() }} ETH Available</span>
                </span>
               <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
             
@@ -90,9 +76,6 @@
               v-model="sendAmount"
             >
           </div>
-          <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-            
-                </p>
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Gas Fee</label>
@@ -151,7 +134,7 @@
   import WalletHeader from './WalletHeader';
   import axios from 'axios';
   import utils from './../common/Utilities';
-  import env from './../common/Environment';
+  import env, {MAINNET} from './../common/Environment';
   import walletKeystore from './../common/Keystore';
   import {sign} from 'ethjs-signer';
 
@@ -166,7 +149,6 @@
   		return {
         tokenTicker: env.tokenTicker,
         tokenName: env.tokenName,
-        currency: env.tokenTicker,
         ethPrice: 0,
         sendEthBalance: 0,
         sendTokenBalance: 0,
@@ -226,7 +208,6 @@
         this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
         this.Rate   = Rate != null ? parseFloat(Rate) : '0';
         this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
-        this.currency = "ETH";
         
       },
       update : function(){
@@ -236,7 +217,7 @@
       },
       getTokenBalance: function () {
         web3.eth.call({
-          to: env.contractAddress,
+          to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
           data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
         }, (error, balance) => {
           if(balance) {
@@ -266,7 +247,7 @@
         });
       },
       getData: function () {
-        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
         let data = contract.methods.tokensSold().encodeABI();
         contract.methods.tokensSold().call().then((result) =>  { 
           
@@ -306,10 +287,6 @@
           this.setSendGasFee();
         }
       },
-      setCurrency: function (currency) {
-        this.currency = currency;
-        this.sendAmount = '';
-      },
       setSendGasFee: function () {
         let sendGasEth = web3.utils.fromWei(web3.utils.toWei(this.sendGas.toString(), 'gwei'), 'ether');
 
@@ -317,24 +294,20 @@
         this.sendGasCost = utils.format(this.sendGasFee * this.ethPrice, 2);
       },
       sendMax: function () {
-        if(this.currency == 'ETH') {
-          this.sendAmount = this.sendEthBalance;
-        } else {
-          this.sendAmount = this.sendTokenBalance;
-        }
+        this.sendAmount = this.sendEthBalance;
       },
       totalforsale: function(){
-        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
         contract.methods.tokensSold().call().then((result) =>  { 
-          localStorage.setItem('tokensSold', JSON.parse(result));
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('tokensSold', data);
+          this.tokensSold = data;
         });
       },
       adj: function(){
         this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000);
-        
       },
       adj2: function(){
-        
         this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000) ;
       },
       verify: async function () {
@@ -379,20 +352,11 @@
           // Format the send amount.
           sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
-          if(this.currency == 'ETH') {
+          
             data = '0x';
             value = sendAmount;
-          } else {
-           
-            let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-
-            data = contract.methods.transfer(sendRecipient, sendAmount).encodeABI();
-            // Change the recipient to be the token contract address.
-            sendRecipient = env.contractAddress;
-            value = 0;
-          }
-
-          let balance = this.currency == 'ETH' ? this.sendEthBalance : this.sendTokenBalance;
+         
+          let balance = this.sendEthBalance;
           // Form the transaction object.
           if(this.sendAmount <= parseFloat(balance)) {
             let transaction = {
@@ -437,28 +401,16 @@
                       address: this.walletAddress
                     };
                     // Save to storage.
-                    if(this.currency == 'ETH') {
-                      let txs = await localStorage.getItem('ethPendingTxs');
+                  
+                    let txs = await localStorage.getItem('ethPendingTxs');
 
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
+                    txs = txs == null ? [] : JSON.parse(txs);
+                    txs.push(pendingTx);
 
-                      await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
+                    await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
 
-                    } else {
-                      let txs = localStorage.getItem('tokenPendingTxs');
-
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
-
-                      await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
-                    }
-                    // Return to summary screen.
-                    if(this.currency == 'ETH') {
-                      this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
-                    } else {
-                      this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
-                    }
+                    this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
+                   
                   } else {
                     this.loading = false;
                     alert('There was a problem sending this transaction.');

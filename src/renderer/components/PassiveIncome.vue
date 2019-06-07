@@ -8,45 +8,29 @@
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">
             <h3 class="mb-2">Passive Income Platform </h3>
-            
-            <div class="inline-flex">
-              <button 
-                class="focus:outline-none border border-bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded-l" 
-                :class="currency == tokenTicker ? 'bg-grey-light' : 'bg-grey-lightest'"
-                @click="setCurrency(tokenTicker)"
-              >
-                {{ tokenTicker }}
-              </button>
-            
-            </div>
           </div>
-          
           <div>
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-                 <span v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
-                 <span v-else>{{ sendEthBalance }} {{ currency }} Available</span>
+                 <span>{{ sendTokenBalance }} {{ tokenTicker }} Available</span>
                </span>
               <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax()">Send Max</a>
             </div>
             <input 
               type="text" @click="Update" @input="Update" @Change="Update"
               class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-              :placeholder="currency"
+              :placeholder="tokenTicker"
               v-model="sendAmount"
             >
           </div>
-          <p> &nbsp;<p>
+         
           <label ref="Rate" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">INTEREST RATE : </label>
            <label ref="Daily" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Daily TOKENS Income : </label>
-           <label ref="Total"class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Total TOKENS Earend : </label>
+           <label ref="Total" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Total TOKENS Earend : </label>
           <div>
           
-          <p> &nbsp;<p>
-         
-          
-          <p> &nbsp;<p>
+       
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Sending Gas Fee</label>
               <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
@@ -75,7 +59,7 @@
                 </p>
               </div>
             </div>
-          </div><p> &nbsp;<p><p> &nbsp;<p>
+          </div>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
@@ -103,7 +87,7 @@
   import WalletHeader from './WalletHeader';
   import axios from 'axios';
   import utils from './../common/Utilities';
-  import env from './../common/Environment';
+  import env, {MAINNET} from './../common/Environment';
   import walletKeystore from './../common/Keystore';
   import {sign} from 'ethjs-signer';
 
@@ -118,7 +102,6 @@
   		return {
         tokenTicker: env.tokenTicker,
         tokenName: env.tokenName,
-        currency: env.tokenTicker,
         ethPrice: 0,
         sendEthBalance: 0,
         sendTokenBalance: 0,
@@ -140,6 +123,7 @@
     mounted() {
       this.getGasPrice();
       this.bootstrapStorage();
+      this.getData();
     },
 
   	methods: {
@@ -166,11 +150,12 @@
         this.sendEthBalance = ethBalance;
         this.sendTokenBalance = tokenBalance;
         this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
-          this.totalsupply2   = totalsupply2 != null ? parseFloat(totalsupply2) : '0';
+        this.totalsupply2   = totalsupply2 != null ? parseFloat(totalsupply2) : '0';
 
+      },
+      getData : function (){
         this.getEthPrice();
       },
-
       getEthPrice: function () {
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
           .then(response => {
@@ -193,12 +178,6 @@
           this.setSendGasFee();
         }
       },
-
-      setCurrency: function (currency) {
-        this.currency = currency;
-        this.sendAmount = '';
-      },
-
       setSendGasFee: function () {
         let sendGasEth = web3.utils.fromWei(web3.utils.toWei(this.sendGas.toString(), 'gwei'), 'ether');
 
@@ -208,12 +187,7 @@
 
       sendMax: function () {
         this.Update();
-        if(this.currency == 'ETH') {
-          this.sendAmount = this.sendEthBalance;
-        } else {
-          this.sendAmount = this.sendTokenBalance;
-        }
-       
+        this.sendAmount = this.sendTokenBalance;
       },
       Update: function(){
         this.$refs.Rate.textContent = "INTEREST RATE : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) *100).toLocaleString() +"%";
@@ -260,22 +234,17 @@
           // Format the gas price.
           sendGasPrice = sendGasPrice * 1.0e9;
           // Format the send amount.
-         sendAmount = utils.ethToWei(sendAmount);
+          sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
-          if(this.currency == 'ETH') {
-             
-            data = '0x';
-            value = sendAmount;
-          } else {
-            let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+         
+          let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
 
-            data = contract.methods.passiveIncomeInvestment(sendAmount).encodeABI();
-            // Change the recipient to be the token contract address.
-            sendRecipient = env.contractAddress;
-            value = 0;
-          }
+          data = contract.methods.passiveIncomeInvestment(sendAmount).encodeABI();
+          // Change the recipient to be the token contract address.
+          sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;
+          value = 0;
 
-          let balance = this.currency == 'ETH' ? this.sendEthBalance : this.sendTokenBalance;
+          let balance = this.sendTokenBalance;
           // Form the transaction object.
           if(this.sendAmount <= parseFloat(balance)) {
             let transaction = {
@@ -285,6 +254,7 @@
               gasPrice: sendGasPrice,
               data: data
             };
+            console.info("transaction",transaction);
             // Send the transaction.
             this.send(transaction, password);
           } else {
@@ -319,28 +289,18 @@
                       address: this.walletAddress
                     };
                     // Save to storage.
-                    if(this.currency == 'ETH') {
-                      let txs = await localStorage.getItem('ethPendingTxs');
+                   
+                    let txs = localStorage.getItem('tokenPendingTxs');
 
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
+                    txs = txs == null ? [] : JSON.parse(txs);
+                    txs.push(pendingTx);
 
-                      await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
-
-                    } else {
-                      let txs = localStorage.getItem('tokenPendingTxs');
-
-                      txs = txs == null ? [] : JSON.parse(txs);
-                      txs.push(pendingTx);
-
-                      await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
-                    }
+                    await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
+                    
                     // Return to summary screen.
-                    if(this.currency == 'ETH') {
-                      this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
-                    } else {
-                      this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
-                    }
+                   
+                    this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
+                   
                   } else {
                     this.loading = false;
                     alert('There was a problem sending this transaction.');

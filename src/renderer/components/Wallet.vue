@@ -31,14 +31,14 @@
         </p>
 
         <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto cursor-pointer">
+          <table class="w-full table-auto">
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-4"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
+            <tr class="border-b border-grey-lighter text-grey bg-white cursor-pointer" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
               <td width="40" height="50" class="px-2" style="vertical-align: middle;">
                 <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
               </td>
@@ -50,7 +50,7 @@
                 {{ pendingTx.key }}
               </td>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedTxs" @click="open(transaction.key)">
+            <tr class="border-b border-grey-lighter text-grey-darker bg-white cursor-pointer" v-for="transaction in completedTxs" @click="open(transaction.key)">
               <td width="40" height="50" class="px-2">
                 <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">
                   <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
@@ -93,7 +93,7 @@
         </p>
 
         <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto cursor-pointer">
+          <table class="w-full table-auto">
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
@@ -115,7 +115,7 @@
                 {{ pendingIN.key }}
               </td>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS" @click="open(transaction.key)">
+            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS">
               <td width="40" height="50" class="px-2">
                 <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">
                   <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
@@ -126,16 +126,18 @@
               </td>
               <td>{{formatTimestamp(transaction.UnlockTime) }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
-              <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+              <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+               @click="open(transaction.key)"
+              >
                 {{ transaction.key }}
+                </td>
                 <td><button 
-            type="button"
-             ref="TermDownInput"
-            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            
-            @click="ClaimInvestment(transaction.ID)"
-          >CLAIM 
-          </button></td>
+                    type="button"
+                    class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
+                    
+                    @click="ClaimInvestment(transaction.ID)"
+                  >CLAIM 
+                  </button></td>
              
             </tr>
           </table>
@@ -147,14 +149,14 @@
         <div class="flex justify-between py-3 border-b border-grey-light">
           <h3 class="pl-3 mt-1">Passive Income Platform</h3>
           <div>
-           
+
             <input 
               type="password" 
               class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
               v-model="password"
               placeholder="Wallet Password" 
             >
-            
+
           </div>
           <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
             <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
@@ -167,7 +169,7 @@
         </p>
 
         <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto cursor-pointer">
+          <table class="w-full table-auto">
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
@@ -177,7 +179,7 @@
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
               
             </tr>
-            <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS" @click="open(pendingPS.key)">
+            <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS">
               <td width="40" height="50" class="px-2" style="vertical-align: middle;">
                 <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
               </td>
@@ -185,11 +187,13 @@
               <td>
                 --
               </td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+              @click="open(pendingPS.key)"
+              >
                 {{ pendingPS.key }}
               </td>
             </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS" @click="open(transaction2.key)">
+            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS">
               <td width="40" height="50" class="px-2">
                 <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">
                   <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
@@ -200,16 +204,17 @@
               </td>
               <td>{{formatTimestamp(transaction2.UnlockTime2) }}</td>
               <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
-              <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-                {{ transaction2.key }}
+              <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+              @click="open(transaction2.key)"
+              >
+                {{ transaction2.key }}</td>
                 <td><button 
-            type="button"
-             ref="TermDownInput"
-            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            @click="ClaimPassiveIncome(transaction2.ID2)"
-            
-          >CLAIM 
-          </button>
+                  type="button"
+                  class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
+                  @click="ClaimPassiveIncome(transaction2.ID2)"
+                  
+                >CLAIM 
+                </button>
               </td>
             </tr>
           </table>
@@ -459,7 +464,6 @@
                     let transactionAmount = listIN.returnValues._investmentValue;
                     let transactionID = listIN.returnValues._ID;
                     let transactionUnlock = listIN.returnValues._unlocktime;
-                   
 
                     if(pendingINVS.includes(listIN.transactionHash)) {
                       this.pendingINVS = this.pendingINVS.filter((tx) => {return tx.key != listIN.transactionHash});
@@ -475,8 +479,6 @@
                         amount: transactionAmount,
                         UnlockTime: transactionUnlock,
                         ID: transactionID
-                  
-                       
                       };
 
                       this.completedINVS = [completedIN].concat(this.completedINVS);
@@ -490,11 +492,6 @@
                   }).catch(error => {console.log(error)});
               }
             }
-
-
-          
-
-
 
           if(listPSVS.length > 0) {
               let lastPSVTimestamp = 0;
@@ -516,8 +513,8 @@
                     let transactionHash = listPS.transactionHash;
                     let transactionFrom = listPS.returnValues._investor2;
                     let transactionAmount = listPS.returnValues._investmentValue2;
-                   let transactionID2 = listPS.returnValues._ID2;
-                   let transactionUnlock = listPS.returnValues._unlocktime2;
+                    let transactionID2 = listPS.returnValues._ID2;
+                    let transactionUnlock = listPS.returnValues._unlocktime2;
 
                     if(pendingPSVS.includes(listPS.transactionHash)) {
                       this.pendingPSVS = this.pendingPSVS.filter((tx) => {return tx.key != listPS.transactionHash});
@@ -543,7 +540,7 @@
                     } else {
                       this.refreshing = false;
                     }
-                      }).catch(error => {console.log(error)});
+                  }).catch(error => {console.log(error)});
               }
             }
 
@@ -566,15 +563,8 @@
 
         this.$electron.shell.openExternal(url);
       },
-      InvestmentUnlockTime: function (ID) {
-        //ID = ID - 1; console.log(ID);
-        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-        contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
-          console.log(result);
-        });
-      },
       ClaimInvestment: function (ID) {
-        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
         let data = contract.methods.releaseInvestment(ID).encodeABI();
         let pass = this.password;
         contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
@@ -587,20 +577,14 @@
                 return
               }
               let transaction = {
-                to: env.contractAddress,
+                to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
                 value: '0',
                 gas: '155069',
                 gasPrice: '10',
                 data: data
               };
-            // Send the transaction.console.log(balance);
-           
-            
-          
-            return(this.send(transaction,pass));
-          
-            
-
+              // Send the transaction.console.log(balance);
+              return(this.send(transaction,pass));
             }
           else{
             alert("Please enter your wallet password");
@@ -613,36 +597,30 @@
       },
       ClaimPassiveIncome: function (ID) {
         
-
-        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
         let data = contract.methods.releasePassiveIncome(ID).encodeABI();
         let pass = this.password;
         contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
-        if(!result){
+          console.log("result",result)
+          if(!result){
             const storedPassword =  localStorage.getItem('passwordEncrypted');
-          
-        if(pass != ''){
-          
-           
             
-            
+            if(pass != ''){      
               if(web3.utils.sha3(pass) != storedPassword) {
                 alert('Invalid password.');
                 return}
                 let transaction = {
                   to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
                   value: '0',
-                  gas: '155069',
+                  gas: '400000',
                   gasPrice: '10',
                   data: data
               };
-                // Send the transaction.console.log(balance);
               
-                
-            
+              // Send the transaction.console.log(balance);
+              console.info("transaction",transaction)
               return(this.send(transaction,pass));
-            
-              
+
             }
             else{
               alert("Please enter your wallet password");
@@ -668,7 +646,8 @@
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
                   console.log(txHash);
-                  if(txHash) { alert("Investment Claimed!");
+                  if(txHash) { 
+                    alert("Investment Claimed!");
                   
                   
                     // Set pending tx.
@@ -679,15 +658,14 @@
                   
                     
                     // Return to summary screen.
-                    if(this.currency == 'ETH') {
-                      this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
-                    } else {
-                      this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
-                    }
+                    
+                    this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
+                    
                   } else {
                   
                     this.loading = false;
                     alert('There was a problem claiming this transaction.');
+                    //alert(error);
                   }
                 });
               });

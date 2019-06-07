@@ -24,7 +24,7 @@
                 ETH
               </button>
             </div>
-          </div><p> &nbsp;<p><p> &nbsp;<p><p> &nbsp;<p>
+          </div>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Pay To</label>
             <input 
@@ -79,7 +79,7 @@
                 </p>
               </div>
             </div>
-          </div><p> &nbsp;<p><p> &nbsp;<p>
+          </div>
           <div>
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
