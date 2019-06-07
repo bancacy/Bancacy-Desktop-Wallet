@@ -84,6 +84,12 @@ export default new Router({
       props: true
     },
     {
+      path: '/Expired',
+      name: 'Expired',
+      component: require('@/components/Expired').default,
+      props: true
+    },
+    {
       path: '*',
       redirect: '/'
     }

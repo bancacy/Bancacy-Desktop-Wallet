@@ -191,7 +191,8 @@
 
     mounted() {
       this.getGasPrice();
-      this.bootstrapStorage();
+      //this.bootstrapStorage();
+      this.update();
     },
 
   	methods: {
@@ -199,7 +200,7 @@
         //console.log('get gas price')
         web3.eth.getGasPrice((error, wei) => {
           if(wei) {
-			  const gasGwei = web3.utils.fromWei(wei.toString(), 'gwei');
+			      const gasGwei = web3.utils.fromWei(wei.toString(), 'gwei');
             
             this.sendGas = Math.round(gasGwei);
             
@@ -225,7 +226,10 @@
           this.Rate   = Rate != null ? parseFloat(Rate) : '0';
           this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
          this.currency = "ETH";
-        this.getEthPrice();
+        
+      },
+      update : function(){
+        this.getData();
         this.getTokenBalance();
         this.getEthBalance();
       },
@@ -252,28 +256,31 @@
             let ethBalance = web3.utils.fromWei(balance, 'ether');
             let ethValue = ethBalance * this.ethPrice;
 
-			this.ethBalance = utils.format(ethBalance, 9);
+            this.ethBalance = utils.format(ethBalance, 9);
+            this.sendEthBalance = utils.format(ethBalance, 9);
             this.ethValue = utils.format(ethValue, 2);
 
             localStorage.setItem('ethBalance', ethBalance.toString());
           }
         });
       },
-      getEthPrice: function () {
+      getData: function () {
         let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-let data = contract.methods.tokensSold().encodeABI();
-
-contract.methods.tokensSold().call().then((result) =>  { 
-                    
-         localStorage.setItem('tokensSold', JSON.parse((result/1000000000000000000)).toFixed(2));
-      });
+        let data = contract.methods.tokensSold().encodeABI();
+        contract.methods.tokensSold().call().then((result) =>  {           
+          localStorage.setItem('tokensSold', JSON.parse((result/1000000000000000000)).toFixed(2));
+          //TODO:
+        });
      
-      contract.methods.totalSupply().call().then((result) =>  { 
-         localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));  
-      })
-      contract.methods.balanceOf(address[0]).call().then((result) =>  { 
-         localStorage.setItem('totalDeposit', JSON.parse((result/1000000000000000000)).toFixed(2));
-      })
+        contract.methods.totalSupply().call().then((result) =>  { 
+          localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
+          //TODO: set the data
+        })
+        contract.methods.balanceOf(0x0).call().then((result) =>  { 
+          localStorage.setItem('totalDeposit', JSON.parse((result/1000000000000000000)).toFixed(2));
+          // TODO:set the data
+        })
+
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
           .then(response => {
             if(response.data.USD != undefined) {
@@ -295,12 +302,10 @@ contract.methods.tokensSold().call().then((result) =>  {
           this.setSendGasFee();
         }
       },
-
       setCurrency: function (currency) {
         this.currency = currency;
         this.sendAmount = '';
       },
-
       setSendGasFee: function () {
         let sendGasEth = web3.utils.fromWei(web3.utils.toWei(this.sendGas.toString(), 'gwei'), 'ether');
 
@@ -316,13 +321,11 @@ contract.methods.tokensSold().call().then((result) =>  {
       },
       totalforsale: function(){
         let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-let data = contract.methods.tokensSold().encodeABI();
+        //let data = contract.methods.tokensSold().encodeABI();
 
-contract.methods.tokensSold().call().then((result) =>  { 
-         localStorage.setItem('tokensSold', JSON.parse(result));
-      });
-
-      
+        contract.methods.tokensSold().call().then((result) =>  { 
+          localStorage.setItem('tokensSold', JSON.parse(result));
+        });
       },
       adj: function(){
         this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000);
