@@ -250,7 +250,7 @@
             alert('You must choose an amount to send.');
             return;
           } else if(sendAmount < 1200000) {
-            alert('Minimum amount for Passive Income is 12,000,000.');
+            alert('Minimum amount for Passive Income is 1,200,000.');
             return;
           } else if(web3.utils.sha3(password) != storedPassword) {
             alert('Invalid password.');

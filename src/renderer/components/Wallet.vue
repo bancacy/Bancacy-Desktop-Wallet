@@ -294,15 +294,6 @@
         this.getCompletedTxs();
       },
       getTokenPrice: function () {
-        /*
-        axios.get('https://coinlib.io/api/v1/coin?key=' + env.coinlibApiKey + '&pref=USD&symbol=' + env.tokenTicker)
-          .then(response => {
-            if(response.data.price != undefined) {
-              localStorage.setItem('tokenPrice', JSON.parse(response.data.price).toString());
-              this.tokenPrice = response.data.price;
-            }
-          }).catch(error => {console.log(error)});
-          */
           axios.get('https://api.coingecko.com/api/v3/coins/pundi-x?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false')
           .then(response => {
               if (response.data.market_data.current_price.usd != undefined) {
@@ -576,18 +567,17 @@
         this.$electron.shell.openExternal(url);
       },
       InvestmentUnlockTime: function (ID) {
-        //ID = ID - 1; 
-        console.log(ID);
-        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
-        contract.methods.investmentStatus(ID).call().then((result) =>  {      
+        //ID = ID - 1; console.log(ID);
+        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
           console.log(result);
         });
       },
-      ClaimPassiveIncome: function (ID) {
-        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
-        let data = contract.methods.releasePassiveIncome(ID).encodeABI();
+      ClaimInvestment: function (ID) {
+        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let data = contract.methods.releaseInvestment(ID).encodeABI();
         let pass = this.password;
-        contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
+        contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
           if(!result){
             const storedPassword =  localStorage.getItem('passwordEncrypted');
             
@@ -597,33 +587,45 @@
                 return
               }
               let transaction = {
-                to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+                to: env.contractAddress,
                 value: '0',
-                gas: '6505069',
-                gasPrice: '100',
+                gas: '155069',
+                gasPrice: '10',
                 data: data
               };
-              // Send the transaction.console.log(balance);  
-              return(this.send(transaction,pass));
+            // Send the transaction.console.log(balance);
+           
+            
+          
+            return(this.send(transaction,pass));
+          
+            
+
             }
-            else{
-              alert("Please enter your wallet password");
-            }
+          else{
+            alert("Please enter your wallet password");
           }
+        }
           else{
             alert("Investment already claimed");
           }
         });
       },
-      ClaimInvestment: function (ID) {
-        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
-        let data = contract.methods.releaseInvestment(ID).encodeABI();
+      ClaimPassiveIncome: function (ID) {
+        
+
+        let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+        let data = contract.methods.releasePassiveIncome(ID).encodeABI();
         let pass = this.password;
-        contract.methods.investmentStatus(ID).call().then((result) =>  {      
-          if(!result){
+        contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
+        if(!result){
             const storedPassword =  localStorage.getItem('passwordEncrypted');
+          
+        if(pass != ''){
+          
+           
             
-            if(pass != ''){
+            
               if(web3.utils.sha3(pass) != storedPassword) {
                 alert('Invalid password.');
                 return}

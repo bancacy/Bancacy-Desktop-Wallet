@@ -88,23 +88,19 @@
             <div class="flex justify-between">
               <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Amount</label> 
               <span  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-                 <span  v-if="currency == tokenTicker">{{ sendTokenBalance }} {{ currency }} Available</span>
-                 <span  v-else>{{ sendEthBalance }} {{ currency }} Available</span>
+                 <span>{{ sendTokenBalance }} {{ currency }} Available</span>
                </span>
                
               <a href="#"  class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax()">Invest Max</a>
             </div>
             <input 
-              type="text" 
-              ref="AmountToken"
+              type="text"
               @change= "updateOnInput()"     @input  =   "updateOnInput()" @click  =   "updateOnInput()" 
               class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
               :placeholder="currency"
               v-model="sendAmount"
             >
           </div>
-
-
           <div v-if="termSelected != ''">
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Investing Gas Fee</label>
@@ -135,8 +131,6 @@
               </div>
             </div>
           </div>
-          
-          
           <div v-if="termSelected != ''">
             <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
             <input 
@@ -145,9 +139,7 @@
               v-model="password"
               placeholder="Password" 
             >
-            
           </div>
-          
           <button  v-if="termSelected"  
             type="button"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
@@ -318,7 +310,7 @@
       },
       updateFormValues:function(){
         this.interestRateText = "Interest rate : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate ) *100 * this.termInput).toLocaleString()+"%";
-        this.earnings ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate )    * this.termInput * this.amountToken).toLocaleString();
+        this.earnings ="BNY earned : " +  (((1 - this.totalDeposit2/this.totalsupply) * this.interestRate )    * this.termInput * this.sendAmount).toLocaleString();
       },
      
       verify: async function () {
@@ -367,19 +359,18 @@
           } 
           else {
             let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-            if(this.$refs.WMQ.textContent == "Weeks"){
-              var term123 = 1;
-              var unlockTime = this.$refs.TermInput.value  * 604800 ;
+            if(this.selectTerm == terms.short){
+              var  term123 = 1;
+              var  unlockTime = this.termInput  * 60 ;
             }
-            if(this.$refs.WMQ.textContent == "Months"){
-              var term123 = 2 ;
-              var unlockTime = this.$refs.TermInput.value  * 2419200 ;
+            if(this.selectTerm == terms.short){
+              var  term123 = 2 ;
+              var  unlockTime = this.termInput  * 120 ;
             }
-            if(this.$refs.WMQ.textContent == "Quarters"){
-              var term123 = 3;
-              var unlockTime = this.$refs.TermInput.value  * 7257600 ;
+            if(this.selectTerm == terms.short){
+              var  term123 = 3;
+              var unlockTime = this.termInput  * 180 ;
             }
-
             data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
             // Change the recipient to be the token contract address.
             sendRecipient = env.contractAddress;
@@ -400,20 +391,17 @@
             console.log(transaction.gas);
             console.log(transaction.gasPrice);
             this.send(transaction, password);
-          } else {
+          } 
+          else {
             this.loading = false;
             alert('You have insufficient funds.');
           }
-        } else {
+        } 
+        else {
           this.loading = false;
           alert('You did not fill in all of the required fields.');
         }
       },
-    
-
-
-        
-        
       send: function (transaction, password) {
         walletKeystore.load(password, (ks) => {
           ks.keyFromPassword(password, (error, pwDerivedKey) => {
@@ -446,7 +434,8 @@
 
                       await localStorage.setItem("ethPendingTxs", JSON.stringify(txs));
 
-                    } else {
+                    } 
+                    else {
                   
                       let txs = localStorage.getItem('tokenPendingTxs');
 
@@ -456,12 +445,11 @@
                       await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
                     }
                     // Return to summary screen.
-                    if(this.currency == 'ETH') {
-                      this.$router.push({name: 'EthWallet', params: {walletAddress: this.walletAddress}});
-                    } else {
-                      this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
-                    }
-                  } else {
+                   
+                    this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
+                    
+                  } 
+                  else {
                   
                     this.loading = false;
                     alert('There was a problem sending this transaction.');
