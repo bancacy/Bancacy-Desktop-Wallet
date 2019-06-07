@@ -97,7 +97,7 @@
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">INDEX   </th>
+              <th class="text-xs text-left font-semibold uppercase">Realese-Date   </th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
@@ -124,7 +124,7 @@
               <td>
                 <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
               </td>
-              <td>{{transaction.ID }}</td>
+              <td>{{formatTimestamp(transaction.UnlockTime) }}</td>
               <td>{{ formatTimestamp(transaction.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction.key }}
@@ -176,7 +176,7 @@
             <tr class="bg-grey-lighter border-b border-grey-light">
               <th class="py-5"></th>
               <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">INDEX   </th>
+              <th class="text-xs text-left font-semibold uppercase">Unlock-Date   </th>
               <th class="text-xs text-left font-semibold uppercase">Date</th>
               <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
@@ -203,7 +203,7 @@
               <td>
                 <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction2.amount) }}</span>
               </td>
-              <td></td>
+              <td>{{formatTimestamp(transaction2.UnlockTime2) }}</td>
               <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
               <td ref="TermDssssownInput" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
                 {{ transaction2.key }}
@@ -211,7 +211,7 @@
             type="button"
              ref="TermDownInput"
             class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-            @click="ClaimPassiveIncome(transaction2.ID)"
+            @click="ClaimPassiveIncome(transaction2.ID2)"
             
           >CLAIM 
           </button>
@@ -376,7 +376,7 @@
                 listINVS.push(INV[s]);
               }
             }
-            let PSV = await contract.getPastEvents('Deposit2', { filter: {_investor2: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
+            let PSV = await contract.getPastEvents('PassiveDeposit', { filter: {_investor2: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(PSV.length > 0) {
               PSV = _.uniqBy(PSV, 'transactionHash');
               for(let w = 0; w < PSV.length; w++) {
@@ -487,6 +487,7 @@
                     let transactionFrom = listIN.returnValues._from;
                     let transactionAmount = listIN.returnValues._investmentValue;
                     let transactionID = listIN.returnValues._ID;
+                    let transactionUnlock = listIN.returnValues._unlocktime;
                    
 
                     if(pendingINVS.includes(listIN.transactionHash)) {
@@ -501,7 +502,9 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                        ID: transactionID,
+                        UnlockTime: transactionUnlock,
+                        ID: transactionID
+                  
                        
                       };
 
@@ -542,7 +545,8 @@
                     let transactionHash = listPS.transactionHash;
                     let transactionFrom = listPS.returnValues._investor2;
                     let transactionAmount = listPS.returnValues._investmentValue2;
-                   let transactionID2 = listPS.returnValues._ID;
+                   let transactionID2 = listPS.returnValues._ID2;
+                   let transactionUnlock = listPS.returnValues._unlocktime2;
 
                     if(pendingPSVS.includes(listPS.transactionHash)) {
                       this.pendingPSVS = this.pendingPSVS.filter((tx) => {return tx.key != listPS.transactionHash});
@@ -556,7 +560,8 @@
                         timestamp: timestamp,
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount,
-                        ID: transactionID2
+                        ID2: transactionID2,
+                        UnlockTime2: transactionUnlock
                       };
 
                       this.completedPSVS = [completedPS].concat(this.completedPSVS);
@@ -582,6 +587,7 @@
       formatTimestamp: function (timestamp) {
         return utils.formatTime(timestamp);
       },
+      
 
       formatAmount: function (amount) {
 		    amount = amount || 0;
@@ -614,7 +620,7 @@ contract.methods.InvestmentStatus(ID).call().then((result) =>  {
 
       ClaimInvestment: function (ID) {
         
-ID = ID - 1; console.log(ID);
+
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
@@ -655,7 +661,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
 
       ClaimPassiveIncome: function (ID) {
         
-ID = ID - 1;
+
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releasePasiveIncome(ID).encodeABI();
 let pass = this.password;
@@ -670,8 +676,8 @@ if(web3.utils.sha3(pass) != storedPassword) {
             let transaction = {
               to: env.contractAddress,
               value: '0',
-              gas: '95069',
-              gasPrice: '10',
+              gas: '6505069',
+              gasPrice: '100',
               data: data
             };
             // Send the transaction.console.log(balance);

@@ -163,7 +163,7 @@
 
 
 		if(supplier== "blockcypher"){
-			axios.get('http://api.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+			axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - txrefs and tx_hash
 					let listTxs = _.uniqBy(response.data.txrefs, 'tx_hash');
@@ -222,7 +222,7 @@
 		if (supplier == "etherscan") {
 			//console.log("before response")
 			//console.log(this)
-			axios.get('http://api.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+		axios.get('http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - result and hash
 					//console.log("in response")

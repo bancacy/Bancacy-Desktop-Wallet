@@ -124,7 +124,7 @@
         sendTokenBalance: 0,
         sendRecipient: '',
         sendAmount: '',
-        sendGasAmount: 180135,
+        sendGasAmount: 210135,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -249,7 +249,7 @@
           } else if(sendAmount < 0) {
             alert('You must choose an amount to send.');
             return;
-          } else if(sendAmount < 12000000) {
+          } else if(sendAmount < 1200000) {
             alert('Minimum amount for Passive Income is 12,000,000.');
             return;
           } else if(web3.utils.sha3(password) != storedPassword) {
