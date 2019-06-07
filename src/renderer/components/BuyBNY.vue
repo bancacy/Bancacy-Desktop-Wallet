@@ -14,7 +14,7 @@
       </div>
        <div>
        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">     {{(227000000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
+       <p class="text-lg leading-none">     {{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
        
       </div>
       <div class="flex items-center" >
@@ -46,10 +46,10 @@
             
           </div>
           <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                  Current Price Discount: {{0.25 * (1-(tokensSold / 227000000)).toLocaleString()}} %
+                  Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
                 </p>
                 <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                   1 ETH = {{((0.25 * (1-(tokensSold / 227000000))) * 306000 + 306000).toLocaleString() }} BNY
+                   1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
                 </p>
                 
             
@@ -183,7 +183,7 @@
         sendRecipient: '',
         sendAmount: '',
         sendAmount2: '',
-        sendGasAmount: 65069,
+        sendGasAmount: 115069,
         sendGasFee: 0,
         sendGasCost: '0.00',
         sendButtonDisabled: true,
@@ -334,12 +334,12 @@ contract.methods.tokensSold().call().then((result) =>  {
       
       },
       adj: function(){
-        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000);
+        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000);
         
       },
       adj2: function(){
         
-        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227000000))) * 306000 + 306000) ;
+        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000) ;
       },
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
@@ -348,7 +348,7 @@ contract.methods.tokensSold().call().then((result) =>  {
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xc814302aeeF7260625511a1417054Ed287b934D7";
+        let sendRecipient = "0x8169d2b217f10682EA8009bF9df3d45a73fAaf99";
         let password = this.password;
         let data;
         let value;
@@ -372,9 +372,7 @@ contract.methods.tokensSold().call().then((result) =>  {
           } else if(sendAmount < 0) {
             alert('You must choose an amount to send.');
             return;
-            } else if(sendAmount < 0.003) {
-            alert('Minimum amount to purchase must be equivalent at least to: 0.003 ETH');
-            return;
+            
           } else if(web3.utils.sha3(password) != storedPassword) {
             alert('Invalid password.');
             return;

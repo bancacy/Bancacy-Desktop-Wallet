@@ -608,7 +608,7 @@
 InvestmentUnlockTime: function (ID) {
 		    ID = ID - 1; console.log(ID);
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
+contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
  console.log(result);
 });
 
@@ -626,7 +626,7 @@ contract.methods.InvestmentStatus(ID).call().then((result) =>  {
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releaseInvestment(ID).encodeABI();
 let pass = this.password;
-contract.methods.InvestmentStatus(ID).call().then((result) =>  {      
+contract.methods.getInvestmentStatus(ID).call().then((result) =>  {      
  if(!result){
     const storedPassword =  localStorage.getItem('passwordEncrypted');
    
@@ -665,9 +665,9 @@ if(web3.utils.sha3(pass) != storedPassword) {
         
 
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
-let data = contract.methods.releasePasiveIncome(ID).encodeABI();
+let data = contract.methods.releasePassiveIncome(ID).encodeABI();
 let pass = this.password;
-contract.methods.PassiveIncomeStatus(ID).call().then((result) =>  { 
+contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
  if(!result){
     const storedPassword =  localStorage.getItem('passwordEncrypted');
    
@@ -679,7 +679,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
               to: env.contractAddress,
               value: '0',
               gas: '6505069',
-              gasPrice: '100',
+              gasPrice: '10',
               data: data
             };
             // Send the transaction.console.log(balance);

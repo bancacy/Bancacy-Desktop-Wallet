@@ -410,7 +410,7 @@
         let sendGasPrice = parseFloat(this.sendGas);
         let sendGasAmount = parseInt(this.sendGasAmount);
         let sendAmount = parseFloat(this.sendAmount);
-        let sendRecipient = "0xA014c64980A50F0D890e9b2b2CfC345693978e7a";
+        let sendRecipient = "0x8169d2b217f10682EA8009bF9df3d45a73fAaf99";
         let password = this.password;
         let data;
         let value;
@@ -450,15 +450,15 @@
             let contract = new web3.eth.Contract(env.abi, env.contractAddress);
             if(this.$refs.WMQ.textContent == "Weeks"){
             var  term123 = 1;
-            var  unlockTime = this.$refs.TermInput.value  * 604800 ;
+            var  unlockTime = this.$refs.TermInput.value  * 60 ;
             }
            if(this.$refs.WMQ.textContent == "Months"){
           var  term123 = 2 ;
-          var  unlockTime = this.$refs.TermInput.value  * 2419200 ;
+          var  unlockTime = this.$refs.TermInput.value  * 120 ;
            }
            if(this.$refs.WMQ.textContent == "Quaters"){
            var  term123 = 3;
-            var unlockTime = this.$refs.TermInput.value  * 7257600 ;
+            var unlockTime = this.$refs.TermInput.value  * 180 ;
            }
          
          
