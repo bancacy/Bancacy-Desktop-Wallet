@@ -579,13 +579,13 @@
               let transaction = {
                 to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
                 from : this.walletAddress,
-                value: '0',
-                gas: '155069',
-                gasPrice: '10',
+                value: 0,
+                gas: 60000,
+                gasPrice: 10 * 1.0e9,
                 data: data
               };
               // Send the transaction.console.log(balance);
-              return(this.send(transaction,pass));
+              this.send(transaction,pass);
             }
           else{
             alert("Please enter your wallet password");
@@ -613,15 +613,15 @@
                 let transaction = {
                   to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
                   from : this.walletAddress,
-                  value: '0',
-                  gas: '3110466',
-                  gasPrice: '21',
+                  value: 0,
+                  gas: 400000,
+                  gasPrice: 10 * 1.0e9,
                   data: data
               };
               
               // Send the transaction.console.log(balance);
               console.info("transaction",transaction)
-              return(this.send(transaction,pass));
+              this.send(transaction,pass);
 
             }
             else{
@@ -644,7 +644,7 @@
               
               web3.eth.getTransactionCount(this.walletAddress, (error, nonce) => {
                 // Add nonce to the transaction object.
-                transaction.nonce = nonce + 1;
+                transaction.nonce = nonce;
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
                   console.log(txHash);
@@ -660,10 +660,11 @@
                   
                     
                     // Return to summary screen.
+                    this.updateWallet();
+                    //this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
                     
-                    this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});
-                    
-                  } else {
+                  } 
+                  if(error) {
                   
                     this.loading = false;
                     alert('There was a problem claiming this transaction.');

@@ -117,7 +117,7 @@
         this.ethPrice     = ethPrice != null ? parseFloat(ethPrice) : '0.00';
         this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0';
         this.pendingTxs   = pendingTxs != null ? JSON.parse(pendingTxs) : [];
-        this.completedTxs = completedTxs != null ? JSON.parse(completedTxs) : [];
+        //this.completedTxs = completedTxs != null ? JSON.parse(completedTxs) : [];
 
         this.updateWallet();
       },
@@ -158,14 +158,11 @@
 
         let pendingTxs = [];
 
-		// BLOCK CYPHER SPECIFIC
-		let supplier = "etherscan";
-
 		let $this = this;
-		if (supplier == "etherscan") {
+		
 			//console.log("before response")
 			//console.log(this)
-			axios.get('http://' + (MAINNET ? 'api' : 'api-kovan')  + '.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+			axios.get('https://' + (MAINNET ? 'api' : 'api-kovan')  + '.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - result and hash
 					//console.log("in response")
@@ -173,7 +170,11 @@
 					//console.log("response")
 					//console.log(response)
 					let listTxs = _.uniqBy(response.data.result, 'hash');
-          			console.log(response.data);
+					  //console.log(response.data);
+					listTxs.sort((a, b) => {
+						return parseInt(b.blockNumber) - parseInt(a.blockNumber);
+					});
+
 					if (listTxs != undefined && listTxs.length > 0) {
 						let lastTxTimestamp = 0;
 						let completedTx;
@@ -227,7 +228,7 @@
 						this.refreshing = false;
 					}
 				}).catch(error => { console.log(error) });
-		  }
+		  
 		  //this.refreshing = $this.refreshing;
       },
 
