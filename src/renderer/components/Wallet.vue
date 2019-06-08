@@ -578,6 +578,7 @@
               }
               let transaction = {
                 to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+                from : this.walletAddress,
                 value: '0',
                 gas: '155069',
                 gasPrice: '10',
@@ -600,7 +601,7 @@
         let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
         let data = contract.methods.releasePassiveIncome(ID).encodeABI();
         let pass = this.password;
-        contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
+        contract.methods.getPassiveIncomeStatus(ID).call().then((result) =>  { 
           console.log("result",result)
           if(!result){
             const storedPassword =  localStorage.getItem('passwordEncrypted');
@@ -611,9 +612,10 @@
                 return}
                 let transaction = {
                   to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+                  from : this.walletAddress,
                   value: '0',
-                  gas: '400000',
-                  gasPrice: '10',
+                  gas: '3110466',
+                  gasPrice: '21',
                   data: data
               };
               
@@ -626,7 +628,7 @@
               alert("Please enter your wallet password");
             }
           }
-          else{ alert("Investment already claimed"); }
+          else{alert("Investment already claimed"); }
         });
       },
       send : function (transaction, password) {
@@ -642,7 +644,7 @@
               
               web3.eth.getTransactionCount(this.walletAddress, (error, nonce) => {
                 // Add nonce to the transaction object.
-                transaction.nonce = nonce;
+                transaction.nonce = nonce + 1;
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
                   console.log(txHash);

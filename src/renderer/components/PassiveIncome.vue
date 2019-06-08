@@ -25,58 +25,62 @@
             >
           </div>
          
-          <label ref="Rate" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">INTEREST RATE : </label>
-           <label ref="Daily" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Daily TOKENS Income : </label>
-           <label ref="Total" class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Total TOKENS Earend : </label>
-          <div>
-          
-       
-            <div class="flex justify-between">
-              <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Sending Gas Fee</label>
-              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
-            </div>
-            <div class="flex">
-              <div class="w-1/3">
-                <input 
-                  type="text" 
-                  class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-                  v-model="sendGas"
-                >
+
+          <div v-if="sendAmount">
+
+            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{rateText}}</label>
+            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{dailyText}}</label>
+            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{totalText}}</label>
+            <div>
+            
+        
+              <div class="flex justify-between">
+                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Sending Gas Fee</label>
+                <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
               </div>
-              <div class="w-1/3">
-                <div class="inline-flex">
-                  <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractGwei()">
-                    <i class="fas fa-chevron-circle-down"></i>
-                  </button>
-                  <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addGwei()">
-                    <i class="fas fa-chevron-circle-up"></i>
-                  </button>
+              <div class="flex">
+                <div class="w-1/3">
+                  <input 
+                    type="text" 
+                    class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
+                    v-model="sendGas"
+                  >
+                </div>
+                <div class="w-1/3">
+                  <div class="inline-flex">
+                    <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractGwei()">
+                      <i class="fas fa-chevron-circle-down"></i>
+                    </button>
+                    <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addGwei()">
+                      <i class="fas fa-chevron-circle-up"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="w-1/3">
+                  <p class="text-xs uppercase text-right text-red text-xs font-bold" v-if="sendEthBalance < sendGasFee">
+                    Insufficient ETH to send
+                  </p>
                 </div>
               </div>
-              <div class="w-1/3">
-                <p class="text-xs uppercase text-right text-red text-xs font-bold" v-if="sendEthBalance < sendGasFee">
-                  Insufficient ETH to send
-                </p>
-              </div>
             </div>
-          </div>
-          <div>
-            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
-            <input 
-              type="password" 
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tightfocus:outline-none focus:border-grey-light"
-              v-model="password"
-              placeholder="Password" 
-            >
-          </div>
+            <div>
+              <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
+              <input 
+                type="password" 
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tightfocus:outline-none focus:border-grey-light"
+                v-model="password"
+                placeholder="Password" 
+              >
+            </div>
           
-          <button 
-            type="button" 
-            class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-          
-            @click="verify"
-          >Send Passive Income <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
-          </button>
+            <button 
+              type="button" 
+              class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
+            
+              @click="verify"
+            >Send Passive Income <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -113,10 +117,13 @@
         sendButtonDisabled: true,
         password: '',
         sendGas: 10,
-        totalDeposit2: '0',
-        totalsupply2: '0',
+        totalDeposit: '0',
+        totalSupply: '0',
         loading: false,
-        error: []
+        error: [],
+        rateText : '',
+        dailyText : '',
+        totalText : ''
   		}
   	},
 
@@ -124,6 +131,7 @@
       this.getGasPrice();
       this.bootstrapStorage();
       this.getData();
+      this.Update();
     },
 
   	methods: {
@@ -143,18 +151,66 @@
         let ethPrice      = await localStorage.getItem('ethPrice');
         let ethBalance    = await localStorage.getItem('ethBalance');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
-        let totalDeposit2  = await localStorage.getItem('totalDeposit2');
-        let totalsupply2  = await localStorage.getItem('Rate2');
+        let totalDeposit  = await localStorage.getItem('totalDeposit');
+        let totalSupply  = await localStorage.getItem('totalSupply');
 
         this.ethPrice = ethPrice;
         this.sendEthBalance = ethBalance;
         this.sendTokenBalance = tokenBalance;
-        this.totalDeposit2   = totalDeposit2 != null ? parseFloat(totalDeposit2) : '0';
-        this.totalsupply2   = totalsupply2 != null ? parseFloat(totalsupply2) : '0';
+        this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
+        this.totalSupply   = totalSupply != null ? parseFloat(totalSupply) : '0';
 
       },
       getData : function (){
+        this.getTokenBalance();
+        this.getEthBalance();
         this.getEthPrice();
+
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+        
+        contract.methods.totalSupply().call().then((result) =>  { 
+          //localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalSupply', data);
+          this.totalSupply = data;
+        })
+        contract.methods.balanceOf(0x0).call().then((result) =>  { 
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalDeposit', data);
+          this.totalDeposit = data;
+        })
+
+      },
+      getTokenBalance: function () {
+        web3.eth.call({
+          to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
+          data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
+        }, (error, balance) => {
+          if(balance) {
+            
+            let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
+            let tokenValue = tokenBalance * this.tokenPrice;
+
+            this.tokenBalance = utils.format(tokenBalance, 2);
+            this.tokenValue = utils.format(tokenValue, 2);
+
+            localStorage.setItem('tokenBalance', tokenBalance.toString());
+          }
+        });
+      },
+      getEthBalance: function () {
+        web3.eth.getBalance(this.walletAddress, (error, balance) => {
+          if(balance) {
+            let ethBalance = web3.utils.fromWei(balance, 'ether');
+            let ethValue = ethBalance * this.ethPrice;
+
+            this.ethBalance = utils.format(ethBalance, 9);
+            this.sendEthBalance = this.ethBalance;
+            this.ethValue = utils.format(ethValue, 2);
+
+            localStorage.setItem('ethBalance', ethBalance.toString());
+          }
+        });
       },
       getEthPrice: function () {
         axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
@@ -186,13 +242,13 @@
       },
 
       sendMax: function () {
-        this.Update();
         this.sendAmount = this.sendTokenBalance;
+        this.Update();
       },
       Update: function(){
-        this.$refs.Rate.textContent = "INTEREST RATE : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) *100).toLocaleString() +"%";
-        this.$refs.Daily.textContent = "DAILY TOKENS INCOME : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount / 365).toLocaleString() +" BNY";
-        this.$refs.Total.textContent = "TOTAL TOKENS EAREND : " +  (((1 - this.totalDeposit2/this.totalsupply2) * 0.128 ) * this.sendAmount).toLocaleString()  +" BNY";
+        this.rateText = "INTEREST RATE : " +  (((1 - this.totalDeposit/this.totalSupply) * 0.128 ) *100).toLocaleString() +"%";
+        this.dailyText = "DAILY TOKENS INCOME : " +  (((1 - this.totalDeposit/this.totalSupply) * 0.128 ) * this.sendAmount / 365).toLocaleString() +" BNY";
+        this.totalText = "TOTAL TOKENS EAREND : " +  (((1 - this.totalDeposit/this.totalSupply) * 0.128 ) * this.sendAmount).toLocaleString()  +" BNY";
       },
 
       verify: async function () {
@@ -257,11 +313,13 @@
             console.info("transaction",transaction);
             // Send the transaction.
             this.send(transaction, password);
-          } else {
+          }
+          else {
             this.loading = false;
             alert('You have insufficient funds.');
           }
-        } else {
+        }
+        else {
           this.loading = false;
           alert('You did not fill in all of the required fields.');
         }

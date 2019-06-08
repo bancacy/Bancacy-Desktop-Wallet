@@ -24,7 +24,7 @@
   },
   "build": {
     "productName": "BANCACY",
-    "appId": "",
+    "appId": "org.Bancacy.Desktop-Wallet",
     "directories": {
       "output": "build"
     },

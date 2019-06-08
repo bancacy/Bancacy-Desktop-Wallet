@@ -196,7 +196,7 @@
         let ethPrice      = await localStorage.getItem('ethPrice');
         let ethBalance    = await localStorage.getItem('ethBalance');
         let tokenBalance  = await localStorage.getItem('tokenBalance');
-        let tokensSold  = await localStorage.getItem('tokensSold');  totalDeposit
+        let tokensSold  = await localStorage.getItem('tokensSold');
         let Rate  = await localStorage.getItem('Rate');
         let totalDeposit  = await localStorage.getItem('totalDeposit');
 
@@ -212,10 +212,45 @@
       },
       update : function(){
         this.getData();
+      },
+      getData: function () {
+        
         this.getTokenBalance();
         this.getEthBalance();
+        
+        
+        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
+        
+        
+        contract.methods.tokensSold().call().then((result) =>  { 
+          
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('tokensSold', data);
+          this.tokensSold = data;
+        });
+     
+        contract.methods.totalSupply().call().then((result) =>  { 
+          //localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalSupply', data);
+          this.totalSupply = data;
+        })
+        contract.methods.balanceOf(0x0).call().then((result) =>  { 
+          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
+          localStorage.setItem('totalDeposit', data);
+          this.totalDeposit = data;
+        })
+
+        axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+          .then(response => {
+            if(response.data.USD != undefined) {
+              localStorage.setItem('ethPrice', JSON.parse(response.data.USD).toString());
+              
+              this.ethPrice = response.data.USD;
+            }
+          }).catch(error => {console.log(error)});
       },
-      getTokenBalance: function () {
+            getTokenBalance: function () {
         web3.eth.call({
           to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
           data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
@@ -245,37 +280,6 @@
             localStorage.setItem('ethBalance', ethBalance.toString());
           }
         });
-      },
-      getData: function () {
-        let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
-        let data = contract.methods.tokensSold().encodeABI();
-        contract.methods.tokensSold().call().then((result) =>  { 
-          
-          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
-          localStorage.setItem('tokensSold', data);
-          this.tokensSold = data;
-        });
-     
-        contract.methods.totalSupply().call().then((result) =>  { 
-          //localStorage.setItem('Rate', JSON.parse((result/1000000000000000000)).toFixed(2));
-          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
-          localStorage.setItem('totalSupply', data);
-          this.totalSupply = data;
-        })
-        contract.methods.balanceOf(0x0).call().then((result) =>  { 
-          let data = web3.utils.fromWei(web3.utils.toBN(result).toString(), 'ether'); 
-          localStorage.setItem('totalDeposit', data);
-          this.totalDeposit = data;
-        })
-
-        axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
-          .then(response => {
-            if(response.data.USD != undefined) {
-              localStorage.setItem('ethPrice', JSON.parse(response.data.USD).toString());
-              
-              this.ethPrice = response.data.USD;
-            }
-          }).catch(error => {console.log(error)});
       },
       addGwei: function () {
         this.sendGas = this.sendGas + 1;
