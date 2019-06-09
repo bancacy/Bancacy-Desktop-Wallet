@@ -638,7 +638,8 @@ if(web3.utils.sha3(pass) != storedPassword) {
               to: env.contractAddress,
               value: '0',
               gas: '155069',
-              gasPrice: '10',
+              gasPrice: '10000000000',
+             
               data: data
             };
             // Send the transaction.console.log(balance);
@@ -667,7 +668,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
 let contract = new web3.eth.Contract(env.abi, env.contractAddress);
 let data = contract.methods.releasePassiveIncome(ID).encodeABI();
 let pass = this.password;
-contract.methods.passiveIncomeStatus(ID).call().then((result) =>  { 
+contract.methods.getPassiveIncomeStatus(ID).call().then((result) =>  { 
  if(!result){
     const storedPassword =  localStorage.getItem('passwordEncrypted');
    
@@ -679,7 +680,7 @@ if(web3.utils.sha3(pass) != storedPassword) {
               to: env.contractAddress,
               value: '0',
               gas: '6505069',
-              gasPrice: '10',
+              gasPrice: '10000000000',
               data: data
             };
             // Send the transaction.console.log(balance);
