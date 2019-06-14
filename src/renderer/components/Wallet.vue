@@ -1,226 +1,226 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row bg-green-darkest brand-bg-image">
     <wallet-header :walletAddress="walletAddress"></wallet-header>
-
-    <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
-      <div>
-        1 {{ tokenTicker }} = {{ "Not Tradable Yet" }}
-      </div>
-      <div class="flex items-center">
-        <div class="mr-12">
-          <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ (tokenBalance.toLocaleString()) }} {{ tokenTicker }}</p>
-        </div>
+    <div class="flex-grow">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
         <div>
-          <p class="text-xs text-center uppercase leading-normal">Value</p> 
-          <p class="text-lg leading-none">{{ "Not Tradable Yet" }} </p>
+          1 {{ tokenTicker }} = {{ "Not Tradable Yet" }}
         </div>
-      </div>
-    </div>
-    <div class="px-3 mt-3">
-      <div class="rounded-lg bg-white shadow">
-        <div class="flex justify-between py-3 border-b border-grey-light">
-          <h3 class="pl-3 mt-1">{{ tokenTicker }} Transactions</h3>
-          <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
-            <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
-          </button>
-        </div>
-
-        <p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
-          There are no transactions to show for this address.
-        </p>
-
-        <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto">
-            <tr class="bg-grey-lighter border-b border-grey-light">
-              <th class="py-4"></th>
-              <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">Date</th>
-              <th class="text-xs text-left font-semibold uppercase">TxHash</th>
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey bg-white cursor-pointer" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
-              <td width="40" height="50" class="px-2" style="vertical-align: middle;">
-                <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
-              </td>
-              <td>Pending</td>
-              <td>
-                --
-              </td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-                {{ pendingTx.key }}
-              </td>
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white cursor-pointer" v-for="transaction in completedTxs" @click="open(transaction.key)">
-              <td width="40" height="50" class="px-2">
-                <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">
-                  <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
-                </span>
-              </td>
-              <td>
-                <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">{{ formatAmount(transaction.amount) }}</span>
-              </td>
-              <td>{{ formatTimestamp(transaction.timestamp) }}</td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-                {{ transaction.key }}
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="px-3 mt-3">
-      <div class="rounded-lg bg-white shadow">
-        <div class="flex justify-between py-3 border-b border-grey-light">
-          <h3 class="pl-3 mt-1">{{ tokenTicker }} Investments</h3>
-          <div>
-           
-            <input 
-              type="password" 
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
-              v-model="password"
-              placeholder="Wallet Password" 
-            >
-            
+        <div class="flex items-center">
+          <div class="mr-12">
+            <!-- <p class="text-xs text-center uppercase leading-normal">Balance</p>  -->
+            <p class="leading-none font-robot text-xl">{{ (tokenBalance) }} {{ tokenTicker }}</p>
           </div>
-          <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
-            <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
-          </button>
-          
+          <div>
+            <p class="leading-none font-robot text-xl">{{ "Not Tradable Yet" }} </p>
+          </div>
         </div>
-
-        <p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
-          There are no Investments to show for this address.
-        </p>
-
-        <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto">
-            <tr class="bg-grey-lighter border-b border-grey-light">
-              <th class="py-5"></th>
-              <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">Realese-Date   </th>
-              <th class="text-xs text-left font-semibold uppercase">Date</th>
-              <th class="text-xs text-left font-semibold uppercase">TxHash</th>
-              <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
-                
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingIN in pendingINVS" @click="open(pendingIN.key)">
-              <td width="40" height="50" class="px-2" style="vertical-align: middle;">
-                <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
-              </td>
-              <td>Pending</td>
-              <td>
-                --
-              </td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-                {{ pendingIN.key }}
-              </td>
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS">
-              <td width="40" height="50" class="px-2">
-                <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">
-                  <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
-                </span>
-              </td>
-              <td>
-                <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
-              </td>
-              <td>{{formatTimestamp(transaction.UnlockTime) }}</td>
-              <td>{{ formatTimestamp(transaction.timestamp) }}</td>
-              <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
-               @click="open(transaction.key)"
-              >
-                {{ transaction.key }}
-                </td>
-                <td><button 
-                    type="button"
-                    class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-                    
-                    @click="ClaimInvestment(transaction.ID)"
-                  >CLAIM 
-                  </button></td>
-             
-            </tr>
-          </table>
-        </div>
-      </div>
       </div>
       <div class="px-3 mt-3">
-      <div class="rounded-lg bg-white shadow">
-        <div class="flex justify-between py-3 border-b border-grey-light">
-          <h3 class="pl-3 mt-1">Passive Income Platform</h3>
-          <div>
-
-            <input 
-              type="password" 
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
-              v-model="password"
-              placeholder="Wallet Password" 
-            >
-
+        <div class="rounded-lg bg-white shadow pb-2">
+          <div class="flex justify-between py-3 border-b border-grey-light">
+            <h3 class="pl-3 mt-1">{{ tokenTicker }} Transactions</h3>
+            <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
+              <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
+            </button>
           </div>
-          <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
-            <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
-          </button>
-          
+
+          <p v-if="completedTxs.length == 0" class="text-sm p-2">
+            There are no transactions to show for this address.
+          </p>
+
+          <div class="overflow-y-scroll max-h-64" v-if="completedTxs.length > 0">
+            <table class="w-full table-auto">
+              <tr class="bg-grey-lighter border-b border-grey-light">
+                <th class="py-4"></th>
+                <th class="text-xs text-left font-semibold uppercase">Amount</th>
+                <th class="text-xs text-left font-semibold uppercase">Date</th>
+                <th class="text-xs text-left font-semibold uppercase">TxHash</th>
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey bg-white cursor-pointer" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
+                <td width="40" height="50" class="px-2" style="vertical-align: middle;">
+                  <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
+                </td>
+                <td>Pending</td>
+                <td>
+                  --
+                </td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+                  {{ pendingTx.key }}
+                </td>
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey-darker bg-white cursor-pointer" v-for="transaction in completedTxs" @click="open(transaction.key)">
+                <td width="40" height="50" class="px-2">
+                  <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">
+                    <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
+                  </span>
+                </td>
+                <td>
+                  <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">{{ utils.format(formatAmount(transaction.amount),10) }}</span>
+                </td>
+                <td>{{ formatTimestamp(transaction.timestamp) }}</td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+                  {{ transaction.key }}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
-
-        <p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
-          There are no Investments to show for this address.
-        </p>
-
-        <div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-          <table class="w-full table-auto">
-            <tr class="bg-grey-lighter border-b border-grey-light">
-              <th class="py-5"></th>
-              <th class="text-xs text-left font-semibold uppercase">Amount</th>
-              <th class="text-xs text-left font-semibold uppercase">Unlock-Date   </th>
-              <th class="text-xs text-left font-semibold uppercase">Date</th>
-              <th class="text-xs text-left font-semibold uppercase">TxHash</th>
-              <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
+      </div>
+      <div class="px-3 mt-3">
+        <div class="rounded-lg bg-white shadow pb-2">
+          <div class="flex justify-between py-3 border-b border-grey-light">
+            <h3 class="pl-3 mt-1">{{ tokenTicker }} Investments</h3>
+            <div>
+            
+              <input 
+                type="password" 
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
+                v-model="password"
+                placeholder="Wallet Password" 
+              >
               
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS">
-              <td width="40" height="50" class="px-2" style="vertical-align: middle;">
-                <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
-              </td>
-              <td>Pending</td>
-              <td>
-                --
-              </td>
-              <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
-              @click="open(pendingPS.key)"
-              >
-                {{ pendingPS.key }}
-              </td>
-            </tr>
-            <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS">
-              <td width="40" height="50" class="px-2">
-                <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">
-                  <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
-                </span>
-              </td>
-              <td>
-                <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction2.amount) }}</span>
-              </td>
-              <td>{{formatTimestamp(transaction2.UnlockTime2) }}</td>
-              <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
-              <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
-              @click="open(transaction2.key)"
-              >
-                {{ transaction2.key }}</td>
-                <td><button 
-                  type="button"
-                  class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
-                  @click="ClaimPassiveIncome(transaction2.ID2)"
+            </div>
+            <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
+              <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
+            </button>
+            
+          </div>
+
+          <p v-if="completedINVS.length == 0" class="text-sm p-2">
+            There are no Investments to show for this address.
+          </p>
+
+          <div class="overflow-y-scroll max-h-64" v-if="completedINVS.length > 0">
+            <table class="w-full table-auto">
+              <tr class="bg-grey-lighter border-b border-grey-light">
+                <th class="py-5"></th>
+                <th class="text-xs text-left font-semibold uppercase">Amount</th>
+                <th class="text-xs text-left font-semibold uppercase">Realese-Date   </th>
+                <th class="text-xs text-left font-semibold uppercase">Date</th>
+                <th class="text-xs text-left font-semibold uppercase">TxHash</th>
+                <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
                   
-                >CLAIM 
-                </button>
-              </td>
-            </tr>
-          </table>
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingIN in pendingINVS" @click="open(pendingIN.key)">
+                <td width="40" height="50" class="px-2" style="vertical-align: middle;">
+                  <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
+                </td>
+                <td>Pending</td>
+                <td>
+                  --
+                </td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+                  {{ pendingIN.key }}
+                </td>
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS">
+                <td width="40" height="50" class="px-2">
+                  <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">
+                    <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
+                  </span>
+                </td>
+                <td>
+                  <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction.amount) }}</span>
+                </td>
+                <td>{{formatTimestamp(transaction.UnlockTime) }}</td>
+                <td>{{ formatTimestamp(transaction.timestamp) }}</td>
+                <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+                @click="open(transaction.key)"
+                >
+                  {{ transaction.key }}
+                  </td>
+                  <td><button 
+                      type="button"
+                      class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
+                      
+                      @click="ClaimInvestment(transaction.ID)"
+                    >CLAIM 
+                    </button></td>
+              
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
+      <div class="px-3 mt-3 pb-4">
+        <div class="rounded-lg bg-white shadow pb-2">
+          <div class="flex justify-between py-3 border-b border-grey-light">
+            <h3 class="pl-3 mt-1">Passive Income Platform</h3>
+            <div>
+
+              <input 
+                type="password" 
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-1 px-2 mb-1 leading-tightfocus:outline-none focus:border-grey-light"
+                v-model="password"
+                placeholder="Wallet Password" 
+              >
+
+            </div>
+            <button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
+              <i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
+            </button>
+            
+          </div>
+
+          <p v-if="completedPSVS.length == 0" class="text-sm p-2">
+            There are no Investments to show for this address.
+          </p>
+
+          <div class="overflow-y-scroll max-h-64" v-if="completedTxs.length > 0">
+            <table class="w-full table-auto">
+              <tr class="bg-grey-lighter border-b border-grey-light">
+                <th class="py-5"></th>
+                <th class="text-xs text-left font-semibold uppercase">Amount</th>
+                <th class="text-xs text-left font-semibold uppercase">Unlock-Date   </th>
+                <th class="text-xs text-left font-semibold uppercase">Date</th>
+                <th class="text-xs text-left font-semibold uppercase">TxHash</th>
+                <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
+                
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS">
+                <td width="40" height="50" class="px-2" style="vertical-align: middle;">
+                  <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
+                </td>
+                <td>Pending</td>
+                <td>
+                  --
+                </td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+                @click="open(pendingPS.key)"
+                >
+                  {{ pendingPS.key }}
+                </td>
+              </tr>
+              <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS">
+                <td width="40" height="50" class="px-2">
+                  <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">
+                    <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
+                  </span>
+                </td>
+                <td>
+                  <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">{{ formatAmount(transaction2.amount) }}</span>
+                </td>
+                <td>{{formatTimestamp(transaction2.UnlockTime2) }}</td>
+                <td>{{ formatTimestamp(transaction2.timestamp) }}</td>
+                <td class="cursor-pointer" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;"
+                @click="open(transaction2.key)"
+                >
+                  {{ transaction2.key }}</td>
+                  <td><button 
+                    type="button"
+                    class="focus:outline-none bg-orange hover:bg-orange-dark text-white py-1 px-2 rounded"
+                    @click="ClaimPassiveIncome(transaction2.ID2)"
+                    
+                  >CLAIM 
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
+    </div>
 	</div>
 </template>
 
@@ -255,7 +255,8 @@
         pendingINVS: [],
         pendingPSVS: [],
         password: '',
-        refreshing: false
+        refreshing: false,
+        utils : utils
   		}
   	},
   	mounted() {

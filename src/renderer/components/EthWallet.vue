@@ -1,67 +1,69 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row  bg-green-darkest brand-bg-image">
 		<wallet-header :walletAddress="walletAddress"></wallet-header>
-		<div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
-			<div>
-				1 ETH = {{ ethPrice }} USD
-			</div>
-			<div class="flex items-center">
-				<div class="mr-12">
-					<p class="text-xs text-center uppercase leading-normal">Balance</p>
-					<p class="text-lg leading-none">{{ ethBalance }} ETH</p>
-				</div>
+		<div class="flex-grow">
+			<div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
 				<div>
-					<p class="text-xs text-center uppercase leading-normal">Value</p>
-					<p class="text-lg leading-none">${{ ethValue }} USD</p>
+					1 ETH = {{ ethPrice }} USD
+				</div>
+				<div class="flex items-center">
+					<div class="mr-12">
+						<p class="text-xs text-center uppercase leading-normal">Balance</p>
+						<p class="text-lg leading-none">{{ ethBalance }} ETH</p>
+					</div>
+					<div>
+						<p class="text-xs text-center uppercase leading-normal">Value</p>
+						<p class="text-lg leading-none">${{ ethValue }} USD</p>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="px-3 mt-3">
-			<div class="rounded-lg bg-white shadow">
-				<div class="flex justify-between py-3 border-b border-grey-light">
-					<h3 class="pl-3 mt-1">ETH Transactions</h3>
-					<button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
-						<i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
-					</button>
-				</div>
-				<p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
-					There are no transactions to show for this address.
-				</p>
-				<div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
-					<table class="w-full table-auto cursor-pointer">
-						<tr class="bg-grey-lighter border-b border-grey-light">
-							<th class="py-4"></th>
-							<th class="text-xs text-left font-semibold uppercase">Amount</th>
-							<th class="text-xs text-left font-semibold uppercase">Date</th>
-							<th class="text-xs text-left font-semibold uppercase">TxHash</th>
-						</tr>
-						<tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
-							<td width="40" height="50" class="px-2" style="vertical-align: middle;">
-								<i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
-							</td>
-							<td>Pending</td>
-							<td>
-								--
-							</td>
-							<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-								{{ pendingTx.key }}
-							</td>
-						</tr>
-						<tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedTxs" @click="open(transaction.key)">
-							<td width="40" height="50" class="px-2" style="vertical-align: middle;">
-								<span :style="transaction.from != walletAddress ? 'color: green' : ''">
-									<i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
-								</span>
-							</td>
-							<td>
-								<span :style="transaction.from != walletAddress ? 'color: green' : ''">{{ formatAmount(transaction.amount) }}</span>
-							</td>
-							<td>{{ formatTimestamp(transaction.timestamp) }}</td>
-							<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
-								{{ transaction.key }}
-							</td>
-						</tr>
-					</table>
+			<div class="px-3 mt-3">
+				<div class="rounded-lg bg-white shadow pb-2">
+					<div class="flex justify-between py-3 border-b border-grey-light">
+						<h3 class="pl-3 mt-1">ETH Transactions</h3>
+						<button type="button" class="focus:outline-none bg-grey-lighter hover:bg-grey-light text-grey-darker py-2 px-4 rounded mr-3" @click="updateWallet()">
+							<i class="fa fa-sync-alt text-md" :class="refreshing ? 'fa-spin' : ''"></i>
+						</button>
+					</div>
+					<p v-if="completedTxs.length == 0" class="text-sm p-2" style="height: 325px;">
+						There are no transactions to show for this address.
+					</p>
+					<div class="overflow-y-scroll" style="height: 330px;" v-if="completedTxs.length > 0">
+						<table class="w-full table-auto cursor-pointer">
+							<tr class="bg-grey-lighter border-b border-grey-light">
+								<th class="py-4"></th>
+								<th class="text-xs text-left font-semibold uppercase">Amount</th>
+								<th class="text-xs text-left font-semibold uppercase">Date</th>
+								<th class="text-xs text-left font-semibold uppercase">TxHash</th>
+							</tr>
+							<tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
+								<td width="40" height="50" class="px-2" style="vertical-align: middle;">
+									<i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
+								</td>
+								<td>Pending</td>
+								<td>
+									--
+								</td>
+								<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+									{{ pendingTx.key }}
+								</td>
+							</tr>
+							<tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedTxs" @click="open(transaction.key)">
+								<td width="40" height="50" class="px-2" style="vertical-align: middle;">
+									<span :style="transaction.from != walletAddress ? 'color: green' : ''">
+										<i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
+									</span>
+								</td>
+								<td>
+									<span :style="transaction.from != walletAddress ? 'color: green' : ''">{{ formatAmount(transaction.amount) }}</span>
+								</td>
+								<td>{{ formatTimestamp(transaction.timestamp) }}</td>
+								<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+									{{ transaction.key }}
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

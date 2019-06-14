@@ -4,7 +4,7 @@ html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%; }
 
-body {
+body { 
   margin: 0; }
 
 article, aside, footer, header, nav, section {
@@ -239,9 +239,12 @@ table {
 #logo {
   margin-top: 4px;
   max-height: 100px; }
-
+.brand-bg-image{
+    background-image : url(~@/assets/img/background.jpg);
+    background-size :  cover;
+  }
 .bg-brand-dark {
-  background-color: rgba(48, 153, 7, 0.822); }
+  background-color: rgba(11,93,1,1); }
 
 .bg-brand-light {
   background-color: rgb(22, 0, 5); }
@@ -289,7 +292,7 @@ table {
   background-color: #f8fafc; }
 
 .bg-white {
-  background-color: rgb(242, 250, 245); }
+  background-color:#f4fef2 }
 
 .bg-red-darkest {
   background-color: #3b0d0c; }
@@ -2044,6 +2047,24 @@ table {
 .font-sans {
   font-family: system-ui,BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif; }
 
+/* roboto-regular - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../webfonts/roboto-v19-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Roboto'), local('Roboto-Regular'),
+       url('../webfonts/roboto-v19-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../webfonts/roboto-v19-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../webfonts/roboto-v19-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../webfonts/roboto-v19-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../webfonts/roboto-v19-latin-regular.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+
+.font-robot{
+  font-family : Roboto;
+}
+
 .font-serif {
   font-family: Constantia,Lucida Bright,Lucidabright,Lucida Serif,Lucida,DejaVu Serif,Bitstream Vera Serif,Liberation Serif,Georgia,serif; }
 
@@ -2182,8 +2203,33 @@ table {
 .h-full {
   height: 100%; }
 
-.h-screen {
-  height: 100vh; }
+  .h-screen {
+    height: 100vh; }
+
+    .min-h-screen {
+      height: 100vh; }
+
+.max-h-10 {
+  max-height: 2.5rem; }
+
+.max-h-12 {
+  max-height: 3rem; }
+
+.max-h-16 {
+  max-height: 4rem; }
+
+.max-h-24 {
+  height: 6rem; }
+
+.max-h-32 {
+  max-height: 8rem; }
+
+.max-h-48 {
+  max-height: 12rem; }
+
+.max-h-64 {
+  max-height: 16rem; }
+
 
 .leading-none {
   line-height: 1; }
@@ -2606,9 +2652,6 @@ table {
 
 .min-h-full {
   min-height: 100%; }
-
-.min-h-screen {
-  min-height: 100vh; }
 
 .min-w-0 {
   min-width: 0; }

@@ -1,9 +1,9 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row  bg-green-darkest brand-bg-image">
     
     <wallet-header :walletAddress="walletAddress"></wallet-header>
 
-    <div class="flex justify-center">
+    <div class="flex flex-grow justify-center">
       <div class="w-full max-w-md mt-4">
         <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
           <div class="flex justify-between">

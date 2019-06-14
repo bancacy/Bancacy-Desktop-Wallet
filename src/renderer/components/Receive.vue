@@ -1,13 +1,14 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row  bg-green-darkest brand-bg-image">
 		
     <wallet-header :walletAddress="walletAddress"></wallet-header>
 
-    <div class="flex justify-center">
+    <div class="flex flex-grow justify-center">
       <div class="w-full max-w-md mt-8">
         <div class="bg-white shadow-md rounded px-8 pt-4 pb-6 mb-4">
           <div class="bg-orange-lightest border-l-4 border-orange text-orange-dark p-4" role="alert">
             <p>Only send Ethereum (ETH) or {{ tokenName }} ({{ tokenTicker }}) to this address.</p>
+            <p>This is your address to share with people so that you can receive tokens.</p>
           </div>
           
           <div class="flex justify-center mt-6 mb-6">

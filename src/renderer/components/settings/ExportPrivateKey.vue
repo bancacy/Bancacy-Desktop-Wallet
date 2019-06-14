@@ -1,5 +1,5 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row  bg-green-darkest brand-bg-image">
 
 		<wallet-header :walletAddress="walletAddress"></wallet-header>
 

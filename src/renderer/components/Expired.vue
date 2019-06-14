@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="min-h-screen flex flex-row  brand-bg-image">
     <nav class="p-2 bg-brand-light">
       <div>
         <div>

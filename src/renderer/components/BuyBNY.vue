@@ -1,129 +1,131 @@
 <template>
-	<div class="h-screen bg-grey-lighter">
+	<div class="min-h-screen flex flex-row  bg-green-darkest brand-bg-image">
     
     <wallet-header :walletAddress="walletAddress"></wallet-header>
-    <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
-      <div>
-      <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-       <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
+    <div class="flex-grow">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
+        <div>
+        <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
+        <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
+          
+        </div>
+        <div>
+        <p class="text-xs text-center uppercase leading-normal">Total BNY Sold</p> 
+        <p class="text-lg leading-none">{{tokensSold.toLocaleString()}} {{ tokenTicker }}</p>
+        </div>
+        <div>
+        <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
+        <p class="text-lg leading-none">{{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
         
-      </div>
-       <div>
-       <p class="text-xs text-center uppercase leading-normal">Total BNY Sold</p> 
-       <p class="text-lg leading-none">{{tokensSold.toLocaleString()}} {{ tokenTicker }}</p>
-      </div>
-       <div>
-       <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-       <p class="text-lg leading-none">{{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
-       
-      </div>
-      <div class="flex items-center" >
+        </div>
+        <div class="flex items-center" >
+          <div class="mr-12">
+            <p class="text-xs text-center uppercase leading-normal">Balance</p> 
+            <p class="text-lg leading-none">{{ tokenBalance.toLocaleString() }} {{ tokenTicker }}</p>
+          </div>
         <div class="mr-12">
-          <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ tokenBalance.toLocaleString() }} {{ tokenTicker }}</p>
-        </div>
-       <div class="mr-12">
-          <p class="text-xs text-center uppercase leading-normal">Balance</p> 
-          <p class="text-lg leading-none">{{ethBalance.toLocaleString()  }} ETH</p>
+            <p class="text-xs text-center uppercase leading-normal">Balance</p> 
+            <p class="text-lg leading-none">{{ethBalance.toLocaleString()  }} ETH</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex justify-center">
-      <div class="w-full max-w-md mt-4">
-        <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
-          <div class="flex justify-between">
-            <h3 class="mb-2">Buy BNY</h3>
-          </div>
-          <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-            Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
+      <div class="flex justify-center">
+        <div class="w-full max-w-md mt-4">
+          <div class="bg-white shadow-md rounded px-4 pt-4 pb-6 mb-4">
+            <div class="flex justify-between">
+              <h3 class="mb-2">Buy BNY</h3>
+            </div>
+            <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+              Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
+            </p>
+            <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
+                1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
           </p>
-          <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-              1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
-        </p>
-          <div>
-          <div class="flex justify-between">
-              <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">BNY Amount To Buy</label>
-              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-                 
-               
-               </span>
-              <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
-            
-            </div>
-          <input 
-              type="text" 
-               ref="SEND2"
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-              :placeholder= 'tokenTicker'
-              v-model="sendAmount2" @Change="adj2()" @input="adj2()" @click="adj2()"
-            >
-
+            <div>
             <div class="flex justify-between">
-              <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
-              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
-               
-                 <span> {{ sendEthBalance.toLocaleString() }} ETH Available</span>
-               </span>
-              <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
-            
-            </div>
-            <input 
-              type="text" id="dd"
-              @Change="adj()" @input="adj()" @click="adj()"
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-              placeholder= 'ETH'
+                <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">BNY Amount To Buy</label>
+                <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
+                  
+                
+                </span>
+                <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
               
-              v-model="sendAmount"
-            >
-          </div>
-          <div>
-            <div class="flex justify-between">
-              <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Gas Fee</label>
-              <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
-            </div>
-            <div class="flex">
-              <div class="w-1/3">
-                <input 
-                  type="text" 
-                  class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
-                  v-model="sendGas"
-                >
               </div>
-              <div class="w-1/3">
-                <div class="inline-flex">
-                  <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractGwei()">
-                    <i class="fas fa-chevron-circle-down"></i>
-                  </button>
-                  <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addGwei()">
-                    <i class="fas fa-chevron-circle-up"></i>
-                  </button>
+            <input 
+                type="text" 
+                ref="SEND2"
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
+                :placeholder= 'tokenTicker'
+                v-model="sendAmount2" @Change="adj2()" @input="adj2()" @click="adj2()"
+              >
+
+              <div class="flex justify-between">
+                <label  class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">ETH Amount</label>
+                <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">
+                
+                  <span> {{ sendEthBalance.toLocaleString() }} ETH Available</span>
+                </span>
+                <a href="#" class="block uppercase tracking-wide text-blue text-xs font-bold mb-2 no-underline" @click="sendMax(),adj(),adj2()">Buy Max</a>
+              
+              </div>
+              <input 
+                type="text" id="dd"
+                @Change="adj()" @input="adj()" @click="adj()"
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
+                placeholder= 'ETH'
+                
+                v-model="sendAmount"
+              >
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Gas Fee</label>
+                <span class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Estimated Gas Fee: {{ sendGasFee }} ETH (${{ sendGasCost }} USD)</span>
+              </div>
+              <div class="flex">
+                <div class="w-1/3">
+                  <input 
+                    type="text" 
+                    class="appearance-none outline-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-grey-light"
+                    v-model="sendGas"
+                  >
+                </div>
+                <div class="w-1/3">
+                  <div class="inline-flex">
+                    <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 mr-1 rounded-l-lg" @click="subtractGwei()">
+                      <i class="fas fa-chevron-circle-down"></i>
+                    </button>
+                    <button class="focus:outline-none bg-grey-lightest border bg-grey-lighter hover:bg-grey-lighter text-grey-darkest font-bold py-3 px-4 rounded-r-lg" @click="addGwei()">
+                      <i class="fas fa-chevron-circle-up"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="w-1/3">
+                  <p class="text-xs uppercase text-right text-red text-xs font-bold" v-if="sendEthBalance < sendGasFee">
+                    Insufficient ETH to buy
+                  </p>
                 </div>
               </div>
-              <div class="w-1/3">
-                <p class="text-xs uppercase text-right text-red text-xs font-bold" v-if="sendEthBalance < sendGasFee">
-                  Insufficient ETH to buy
-                </p>
-              </div>
             </div>
+            <div>
+              <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
+              <input 
+                type="password" 
+                class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tightfocus:outline-none focus:border-grey-light"
+                v-model="password"
+                placeholder="Password" 
+                
+              >
+            </div>
+            <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying:  {{sendAmount2}} BNY</span>
+            <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{sendAmount}} ETH</span>
+            <button 
+              type="button" 
+              class="focus:outline-none  bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
+              @click="verify"
+            >Buy BNY <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>  
+            </button>
           </div>
-          <div>
-            <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">Account Password</label>
-            <input 
-              type="password" 
-              class="appearance-none outline-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3 leading-tightfocus:outline-none focus:border-grey-light"
-              v-model="password"
-              placeholder="Password" 
-              
-            >
-          </div>
-          <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">You are buying:  {{sendAmount2}} BNY</span>
-          <span class="block uppercase tracking-wide text-black-darker text-xs font-bold mb-2">Cost: {{sendAmount}} ETH</span>
-          <button 
-            type="button" 
-            class="focus:outline-none  bg-orange hover:bg-orange-dark text-white py-3 px-6 rounded"
-            @click="verify"
-          >Buy BNY <i class="ml-1 fas fa-spin fa-circle-notch" v-if="loading"></i>  
-          </button>
         </div>
       </div>
     </div>
