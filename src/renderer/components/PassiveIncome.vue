@@ -353,6 +353,7 @@
                     txs = txs == null ? [] : JSON.parse(txs);
                     txs.push(pendingTx);
 
+                    await localStorage.setItem("tokenPendingPSVS", JSON.stringify(txs));
                     await localStorage.setItem("tokenPendingTxs", JSON.stringify(txs));
                     
                     // Return to summary screen.

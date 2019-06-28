@@ -6,7 +6,7 @@
       <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
         <div>
         <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-        <p class="text-lg leading-none">227,700,000 {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">1 {{ tokenTicker }}</p>
           
         </div>
         <div>
@@ -15,7 +15,7 @@
         </div>
         <div>
         <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-        <p class="text-lg leading-none">{{(227700000 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">{{(1 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
         
         </div>
         <div class="flex items-center" >

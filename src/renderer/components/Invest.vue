@@ -50,8 +50,6 @@
         </button>
         
         </div>
-
-
           <div v-if="termSelected != ''">
             <div class="flex justify-between">
               <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2">{{termSelected}}</label>
@@ -347,15 +345,15 @@
           let  term123;
           if(this.termSelected == this.terms.short){
             term123 = 1;
-            unlockTime = this.termInput  * 60 ;
+            unlockTime = this.termInput  * 604800;
           }
           if(this.termSelected == this.terms.mid){
             term123 = 2 ;
-            unlockTime = this.termInput  * 120 ;
+            unlockTime = this.termInput  * 2419200;
           }
           if(this.termSelected == this.terms.long){
             term123 = 3;
-            unlockTime = this.termInput  * 180 ;
+            unlockTime = this.termInput  * 7257600;
           }
           console.log("term123",term123)
           console.log("unlockTime",unlockTime)

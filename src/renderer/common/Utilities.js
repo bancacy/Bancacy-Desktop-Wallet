@@ -19,7 +19,9 @@ class Utilities {
 
 		return parts.join(".");
 	}
-
+  newer = (timestamp) => {
+    return moment().unix() > timestamp;
+  }
   formatTime = (timestamp) => { 
     return moment.unix(timestamp).fromNow();
   }

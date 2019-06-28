@@ -50,6 +50,7 @@
         Settings
       </a>
     </div>
+    <div class="text-grey" v-if="!MAINNET">Testnet version</div>
   </nav>
 </template>
 
@@ -63,6 +64,7 @@
 			return {
         tokenTicker: env.tokenTicker,
         tokenName: env.tokenName,
+        MAINNET : env.MAINNET
 			}
 		},
 
