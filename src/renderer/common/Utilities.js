@@ -3,7 +3,7 @@ import env from './Environment';
 import Web3 from 'web3';
 class Utilities {
   web3 = () => {
-    return new Web3(new Web3.providers.HttpProvider('https://' + (env.MAINNET ? 'MAINNET' : 'kovan') + '.infura.io/v3/' + env.infuraApiKey));
+    return new Web3(new Web3.providers.HttpProvider('https://' + (env.MAINNET ? 'MAINNET' : 'ropsten') + '.infura.io/v3/' + env.infuraApiKey));
   };
 
 	format = (number, decimals = 5) => {

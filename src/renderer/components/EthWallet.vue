@@ -164,7 +164,7 @@
 		
 			//console.log("before response")
 			//console.log(this)
-			axios.get('https://' + (MAINNET ? 'api' : 'api-kovan')  + '.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
+			axios.get('https://' + (MAINNET ? 'api' : 'api-ropsten')  + '.etherscan.io/api?module=account&action=txlist&address=' + this.walletAddress+'&startblock=0&endblock=99999999&sort=asc')
 				.then(response => {
 					// API NODE  - result and hash
 					//console.log("in response")

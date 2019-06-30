@@ -311,7 +311,7 @@
         let data;
         let value;
 
-        console.log("sendEthBalance",sendEthBalance);
+        //console.log("sendEthBalance",sendEthBalance);
         if(sendGasPrice != '' && sendGasAmount != '' && sendAmount != '' &&  password != '') {
           
           if(sendEthBalance <= 0) {
@@ -339,7 +339,7 @@
           // Format the send amount.
           sendAmount = utils.ethToWei(sendAmount);
           // Set the data and value based on the currency.
-          console.log("sendAmount",sendAmount);
+          //console.log("sendAmount",sendAmount);
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           let  unlockTime;
           let  term123;
@@ -355,19 +355,19 @@
             term123 = 3;
             unlockTime = this.termInput  * 7257600;
           }
-          console.log("term123",term123)
-          console.log("unlockTime",unlockTime)
-          console.log("this.termInput",this.termInput)
+          //console.log("term123",term123)
+          //console.log("unlockTime",unlockTime)
+          //console.log("this.termInput",this.termInput)
           data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
           // Change the recipient to be the token contract address.
-          console.log("data",data)
+          //console.log("data",data)
           sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;
-          console.log("sendRecipient",sendRecipient)
+          //console.log("sendRecipient",sendRecipient)
           value = 0;
 
-          console.log("value",value)
+          //console.log("value",value)
           let balance = this.sendTokenBalance;
-          console.log("balance",balance)
+          //console.log("balance",balance)
           // Form the transaction object.
           if(this.sendAmount <= parseFloat(balance)) {
             let transaction = {
@@ -377,9 +377,9 @@
               gasPrice: sendGasPrice,
               data: data
             };
-            console.log(transaction.value);
-            console.log(transaction.gas);
-            console.log(transaction.gasPrice);
+            //console.log(transaction.value);
+            //console.log(transaction.gas);
+            //console.log(transaction.gasPrice);
             this.send(transaction, password);
           } 
           else {

@@ -267,7 +267,7 @@
   		}
   	},
   	mounted() {
-      console.log(moment().unix())
+      //console.log(moment().unix())
       this.hasWalletAddress();
   	},
   	methods: {
@@ -418,7 +418,7 @@
               for(var p = 0; p < tempPending.length; p++) {
                 pendingTxs.push(tempPending[p].key);
               }
-              console.log("listTxs",listTxs)
+              //log("listTxs",listTxs)
               for(let listTx of listTxs) {
                 await web3.eth.getBlock(listTx.blockNumber)
                   .then(response => {
@@ -561,8 +561,8 @@
                             day: day,
                             timeOwed: ((moment().unix() - transactionInvestmentTime) / (86400)) - (day-1)
                           };
-                          console.log("t-tit",moment().unix(),transactionInvestmentTime)
-                          console.log(moment().unix()-transactionInvestmentTime)
+                          //console.log("t-tit",moment().unix(),transactionInvestmentTime)
+                          //console.log(moment().unix()-transactionInvestmentTime)
                           this.completedPSVS = [completedPS].concat(this.completedPSVS);
 
                           localStorage.setItem('tokenCompletedPSVS', JSON.stringify(this.completedPSVS));
@@ -611,7 +611,7 @@
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           //alert("1")
           contract.methods.getPassiveIncomeStatus(investmentID).call().then((result) =>  { 
-            console.log("result",result)
+            //console.log("result",result)
             //console.log(investmentID)
             let data = result; 
             //alert(data)
@@ -635,7 +635,7 @@
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           //alert("1")
           contract.methods.getPassiveIncomeDay(investmentID).call().then((result) =>  { 
-            console.log("result",result)
+            //console.log("result",result)
             //console.log(investmentID)
             let data = result; 
             //alert(data)
@@ -664,7 +664,7 @@
         return from == this.walletAddress ? 'fa-arrow-alt-circle-up' : 'fa-arrow-alt-circle-down'
       },
       open: function (txHash) {
-        const url = 'https://etherscan.io/tx/' + txHash;
+        const url = 'https://' + (MAINNET ? '' : 'ropsten.') + 'etherscan.io/tx/' + txHash;
 
         this.$electron.shell.openExternal(url);
       },
@@ -708,7 +708,7 @@
         let data = contract.methods.releasePassiveIncome(ID).encodeABI();
         let pass = this.password;
         contract.methods.getPassiveIncomeStatus(ID).call().then((result) =>  { 
-          console.log("result",result)
+          //console.log("result",result)
           if(!result){
             const storedPassword =  localStorage.getItem('passwordEncrypted');
             
@@ -726,7 +726,7 @@
               };
               
               // Send the transaction.console.log(balance);
-              console.info("transaction",transaction)
+              //console.info("transaction",transaction)
               localStorage.removeItem("tokenCompletedPSVS")
               this.send(transaction,pass);
             }
@@ -753,7 +753,7 @@
                 transaction.nonce = nonce;
                 // Sign the transaction and send.
                 web3.eth.sendSignedTransaction(sign(transaction, '0x' + ks.exportPrivateKey(this.walletAddress, pwDerivedKey)), async (error, txHash) => {
-                  console.log(txHash);
+                  //console.log(txHash);
                   if(txHash) { 
                     alert("Investment Claimed!");
                   
@@ -764,7 +764,7 @@
                       address: this.walletAddress
                     };
                   
-                    console.log("pendingTx",pendingTx)
+                    //console.log("pendingTx",pendingTx)
                     // Return to summary screen.
                     this.updateWallet();
                     //this.$router.push({name: 'Wallet', params: {walletAddress: this.walletAddress}});

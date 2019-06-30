@@ -24,14 +24,14 @@
         this.expired = false;
         this.checkForUpdate().then((result,error) => {
           if(result){
-          console.log("LOADED APP") 
-          console.log("expired",this.expired)
+          //console.log("LOADED APP") 
+          //console.log("expired",this.expired)
           }
           if(error){
-            console.log("error")
-            console.log("expired",this.expired)
+            console.log("error",error)
+            //console.log("expired",this.expired)
           }
-          console.log("outexpirerd",this.expired)
+          //console.log("outexpirerd",this.expired)
           if(this.expired == true){
             this.$router.push({name: 'Expired'});
             //return false;
