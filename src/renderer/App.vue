@@ -1,16 +1,18 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <update></update>
   </div>
 </template>
 
 <script>
-
+  import Update from './components/settings/Update';
   import env from './common/Environment';
   import axios from 'axios';
   import { now } from 'moment';
   export default {
     name: 'erctokendesktop',
+    components: { Update },
     data() {
         return{
           updateAvailable : false,
