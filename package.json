@@ -32,10 +32,10 @@
       "dist/electron/**/*"
     ],
     "mac": {
-      "icon": "build/icons/icon.icns"
+      
     },
     "win": {
-      "icon": "build/icons/icon.ico",
+      
       "target": [
         {
           "target": "nsis",
@@ -47,7 +47,7 @@
       ]
     },
     "linux": {
-      "icon": "build/icons/256x256.png"
+     
     },
     "publish": {
       "provider": "github"
