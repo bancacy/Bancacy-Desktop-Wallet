@@ -16,8 +16,7 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     height: 700,
-    width: 1324,
-    icon:  'C:/Users/N-Elias/Documents/GitHub/Bancacy-Desktop-Wallet/src/renderer/assets/img/favicon.jpg'
+    width: 1324
   });
 
   mainWindow.loadURL(winURL)
@@ -97,7 +96,7 @@ const template = [
   
   const menu = Menu.buildFromTemplate(template)
 
-  Menu.setApplicationMenu(menu)
+  Menu.setApplicationMenu(null)
 }
 
 app.on('ready', createWindow)
