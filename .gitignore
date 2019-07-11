@@ -14,3 +14,4 @@ obj/x86/Debug/project.razor.json
 bin/*
 obj/*
 /package-lock.json
+/build/*

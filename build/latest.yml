@@ -1,8 +1,8 @@
-version: 0.0.2
+version: 0.0.3
 files:
-  - url: BANCACYDesktop-Setup-0.0.2.exe
-    sha512: l9L5sR46fGeQSnB2fTxYOrR8gZR8PgQj9iy7tOGlXcveYfLM374io01CdigJ5wBjMd1Jr41ShyYmcHBDRkgQOg==
-    size: 46683438
-path: BANCACYDesktop-Setup-0.0.2.exe
-sha512: l9L5sR46fGeQSnB2fTxYOrR8gZR8PgQj9iy7tOGlXcveYfLM374io01CdigJ5wBjMd1Jr41ShyYmcHBDRkgQOg==
-releaseDate: '2019-07-01T16:52:20.925Z'
+  - url: BANCACY.Installable.0.0.3.exe
+    sha512: 1dwpXiXa8YjQXuoBjNM+MpsWpw42azHlQTeFjkBSzuaEIvY756BVOTSOMD2dsAwzRvhzbG+lsnBTWRVeDrlDKA==
+    size: 88351600
+path: BANCACY.Installable.0.0.3.exe
+sha512: 1dwpXiXa8YjQXuoBjNM+MpsWpw42azHlQTeFjkBSzuaEIvY756BVOTSOMD2dsAwzRvhzbG+lsnBTWRVeDrlDKA==
+releaseDate: '2019-07-11T16:14:47.359Z'
