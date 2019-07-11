@@ -15,3 +15,5 @@ bin/*
 obj/*
 /package-lock.json
 /build/*
+!/build/*.*
+build/BANCACY*
