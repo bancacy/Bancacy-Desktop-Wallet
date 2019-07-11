@@ -1,6 +1,6 @@
 {
   "name": "BANCACYDesktop",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Luna <lnmnky@pm.me>",
   "repository": {
     "type": "git",
@@ -31,6 +31,34 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "mac": {
+      "icon": "build/icons/icon.icns"
+    },
+    "win": {
+      "icon": "build/icons/icon.ico",
+      "target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64",
+						"ia32"
+					]
+				}
+			]
+    },
+    "linux": {
+      "icon": "build/icons/256x256.png"
+    },
+    "publish": {
+			"provider": "github"
+    },
+    "nsis": {
+			"shortcutName": "BANCACY",
+			"artifactName": "BANCACY.Installable.${version}.${ext}"
+		},
+		"portable": {
+			"artifactName": "BANCACY.Portable.${version}.${ext}"
+		},
     "dmg": {
       "contents": [
         {
@@ -44,16 +72,8 @@
           "y": 150,
           "type": "file"
         }
-      ]
-    },
-    "mac": {
-      "icon": "build/icons/icon.icns"
-    },
-    "win": {
-      "icon": "build/icons/icon.ico"
-    },
-    "linux": {
-      "icon": "build/icons"
+      ],
+      "artifactName": "BANCACY.Mac.Installable.${version}.${ext}"
     }
   },
   "dependencies": {
@@ -93,7 +113,7 @@
     "electron-devtools-installer": "2.2.4",
     "electron-installer-dmg": "2.0.0",
     "electron-packager": "12.2.0",
-    "electron-rebuild": "^1.8.4",
+    "electron-rebuild": "^1.8.2",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
