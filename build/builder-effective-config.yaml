@@ -4,9 +4,9 @@ directories:
 productName: BANCACY
 appId: org.Bancacy.Desktop-Wallet
 files:
-  - dist/electron/**/*
-mac:
-  icon: build/icons/icon.icns
+  - filter:
+      - dist/electron/**/*
+mac: {}
 win:
   target:
     - target: nsis
