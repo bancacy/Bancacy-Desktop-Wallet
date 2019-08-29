@@ -37,7 +37,7 @@
                 <th class="text-xs text-left font-semibold uppercase">Date</th>
                 <th class="text-xs text-left font-semibold uppercase">TxHash</th>
               </tr>
-              <tr class="border-b border-grey-lighter text-grey bg-white cursor-pointer" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
+              <tr v-bind:key="pendingTx.key" class="border-b border-grey-lighter text-grey bg-white cursor-pointer" v-for="pendingTx in pendingTxs" @click="open(pendingTx.key)">
                 <td width="40" height="50" class="px-2" style="vertical-align: middle;">
                   <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
                 </td>
@@ -49,7 +49,7 @@
                   {{ pendingTx.key }}
                 </td>
               </tr>
-              <tr class="border-b border-grey-lighter text-grey-darker bg-white cursor-pointer" v-for="transaction in completedTxs" @click="open(transaction.key)">
+              <tr v-bind:key="transaction.key" class="border-b border-grey-lighter text-grey-darker bg-white cursor-pointer" v-for="transaction in completedTxs" @click="open(transaction.key)">
                 <td width="40" height="50" class="px-2">
                   <span :style="transaction.from != walletAddress ? 'color: green' : 'color: red'">
                     <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(transaction.from)"></i>
@@ -102,7 +102,7 @@
                 <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
                   
               </tr>
-              <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingIN in pendingINVS" @click="open(pendingIN.key)">
+              <tr v-bind:key="pendingIN.key" class="border-b border-grey-lighter text-grey bg-white" v-for="pendingIN in pendingINVS" @click="open(pendingIN.key)">
                 <td width="40" height="50" class="px-2" style="vertical-align: middle;">
                   <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
                 </td>
@@ -114,7 +114,7 @@
                   {{ pendingIN.key }}
                 </td>
               </tr>
-              <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS">
+              <tr v-bind:key="transaction.key" class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction in completedINVS">
                 <td width="40" height="50" class="px-2">
                   <span :style="transaction.investmentValue > 0 ? 'color: green' : 'color: blue'">
                     <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
@@ -181,7 +181,7 @@
                 <th class="text-xs text-left font-semibold uppercase">ClaimS</th>
                 
               </tr>
-              <tr class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS">
+              <tr v-bind:key="pendingPS.key" class="border-b border-grey-lighter text-grey bg-white" v-for="pendingPS in pendingPSVS">
                 <td width="40" height="50" class="px-2" style="vertical-align: middle;">
                   <i class="pt-1 pl-1 fas fa-spin fa-circle-notch"></i>
                 </td>
@@ -195,7 +195,7 @@
                   {{ pendingPS.key }}
                 </td>
               </tr>
-              <tr class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS">
+              <tr v-bind:key="transaction2.key" class="border-b border-grey-lighter text-grey-darker bg-white" v-for="transaction2 in completedPSVS">
                 <td width="40" height="50" class="px-2">
                   <span :style="transaction2.amount > 0 ? 'color: green' : 'color: blue'">
                     <i class="text-lg pt-1 pl-1 far" :class="getTxIcon(walletAddress)"></i>
