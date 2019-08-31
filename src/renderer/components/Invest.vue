@@ -358,7 +358,7 @@
           //console.log("term123",term123)
           //console.log("unlockTime",unlockTime)
           //console.log("this.termInput",this.termInput)
-          data = contract.methods.investment(unlockTime, sendAmount, term123).encodeABI();
+          data = contract.methods.makeInvestment(unlockTime, sendAmount, term123).encodeABI();
           // Change the recipient to be the token contract address.
           //console.log("data",data)
           sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;

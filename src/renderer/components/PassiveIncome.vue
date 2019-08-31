@@ -295,7 +295,7 @@
          
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
 
-          data = contract.methods.passiveIncomeInvestment(sendAmount).encodeABI();
+          data = contract.methods.makePassiveIncomeInvestment(sendAmount).encodeABI();
           // Change the recipient to be the token contract address.
           sendRecipient = MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet;
           value = 0;

@@ -6,17 +6,19 @@
       <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
         <div>
         <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-        <p class="text-lg leading-none">1 {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">534,600,000 {{ tokenTicker }}</p>
           
         </div>
         <div>
         <p class="text-xs text-center uppercase leading-normal">Total BNY Sold</p> 
-        <p class="text-lg leading-none">{{tokensSold.toLocaleString()}} {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">{{utils.format(tokensSold,0)}} {{ tokenTicker }}</p>
         </div>
         <div>
         <p class="text-xs text-center uppercase leading-normal">BNY AVAILABLE for sale</p> 
-        <p class="text-lg leading-none">{{(1 - tokensSold).toLocaleString()  }} {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">{{utils.format(534600000 - tokensSold,0).toLocaleString()  }} {{ tokenTicker }}</p>
         
+		<progress :value="tokensSold" max="534600000" />
+		
         </div>
         <div class="flex items-center" >
           <div class="mr-12">
@@ -36,10 +38,10 @@
               <h3 class="mb-2">Buy BNY</h3>
             </div>
             <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-              Current Price Discount: {{0.25 * (1-(tokensSold / 227700000)).toLocaleString()}} %
+              Current Price Discount: {{0.25 * (1-(tokensSold / 534600000)).toLocaleString()}} %
             </p>
             <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                1 ETH = {{((0.25 * (1-(tokensSold / 227700000))) * 100000000 + 100000000).toLocaleString() }} BNY
+                1 ETH = {{((0.25 * (1-(tokensSold / 534600000))) * 100000000 + 100000000).toLocaleString() }} BNY
           </p>
             <div>
             <div class="flex justify-between">
@@ -170,7 +172,8 @@
         password: '',
         sendGas: 10,
         loading: false,
-        error: []
+		error: [],
+		utils: utils
   		}
   	},
 
@@ -311,10 +314,10 @@
         });
       },
       adj: function(){
-        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000);
+        this.sendAmount2 = this.sendAmount *  ((0.25 * (1-(this.tokensSold / 534600000))) * 100000000 + 100000000);
       },
       adj2: function(){
-        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 227700000))) * 100000000 + 100000000) ;
+        this.sendAmount = this.sendAmount2 /  ((0.25 * (1-(this.tokensSold / 534600000))) * 100000000 + 100000000) ;
       },
       verify: async function () {
         const storedPassword = await localStorage.getItem('passwordEncrypted');
