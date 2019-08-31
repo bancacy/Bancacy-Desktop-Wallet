@@ -117,10 +117,6 @@ legend {
   padding: 0;
   white-space: normal; }
 
-progress {
-  display: inline-block;
-  vertical-align: baseline; }
-
 textarea {
   overflow: auto; }
 
@@ -15951,4 +15947,13 @@ table {
   .xl\:z-50 {
     z-index: 50; }
   .xl\:z-auto {
-    z-index: auto; } } 
+	z-index: auto; } } 
+	
+	progress::-webkit-progress-bar {
+
+		@apply bg-gray-500;
+		border : 1px solid white;
+	   }
+	 progress::-webkit-progress-value {
+	   @apply bg-green-700;
+	   }

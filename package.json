@@ -1,7 +1,7 @@
 {
   "name": "BANCACYDesktop",
-  "version": "0.0.3",
-  "author": "Luna <lnmnky@pm.me>",
+  "version": "0.0.4",
+  "author": "Info <Info@bancacy.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/bancacy/Bancacy-Desktop-Wallet"
@@ -20,7 +20,8 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": ""
+    "postinstall": "",
+    "css": "npx tailwind build src/renderer/assets/css/tailwind.scss -o src/renderer/assets/css/tailwind.css"
   },
   "build": {
     "productName": "BANCACY",
@@ -31,11 +32,8 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "mac": {
-      
-    },
+    "mac": {},
     "win": {
-      
       "target": [
         {
           "target": "nsis",
@@ -46,9 +44,7 @@
         }
       ]
     },
-    "linux": {
-     
-    },
+    "linux": {},
     "publish": {
       "provider": "github"
     },
@@ -91,7 +87,8 @@
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "web3": "1.0.0-beta.34",
-    "websocket": "^1.0.29"
+    "websocket": "^1.0.29",
+    "tailwindcss": "^1.0.4"
   },
   "devDependencies": {
     "ajv": "^6.9.1",
