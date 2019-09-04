@@ -2,7 +2,6 @@
 dist/electron/*
 dist/web/*
 node_modules/
-src/renderer/common/Environment.js
 npm-debug.log
 npm-debug.log.*
 thumbs.db
@@ -13,7 +12,6 @@ build/win-unpacked
 obj/x86/Debug/project.razor.json
 bin/*
 obj/*
-/package-lock.json
 /build/*
 !/build/*.*
 build/BANCACY*
