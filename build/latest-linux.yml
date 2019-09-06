@@ -1,0 +1,9 @@
+version: 0.0.3
+files:
+  - url: BANCACYDesktop-0.0.3-x86_64.AppImage
+    sha512: 2jAO8pE79KzgjM1joqtJxTmjFgfrF5McpluXXq1uxrLRh/DO4OpVidCtbFKB1FgIaBNkWEDuNvlfOa3hE9Leuw==
+    size: 64078434
+    blockMapSize: 68518
+path: BANCACYDesktop-0.0.3-x86_64.AppImage
+sha512: 2jAO8pE79KzgjM1joqtJxTmjFgfrF5McpluXXq1uxrLRh/DO4OpVidCtbFKB1FgIaBNkWEDuNvlfOa3hE9Leuw==
+releaseDate: '2019-07-11T16:34:44.703Z'
