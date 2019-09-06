@@ -4,7 +4,8 @@ directories:
 productName: BANCACY
 appId: org.Bancacy.Desktop-Wallet
 files:
-  - dist/electron/**/*
+  - filter:
+      - dist/electron/**/*
 mac: {}
 win:
   target:

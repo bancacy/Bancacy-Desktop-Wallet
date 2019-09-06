@@ -1,12 +1,12 @@
 version: 0.0.5
 files:
   - url: BANCACY-0.0.5-mac.zip
-    sha512: 2kbq4hcdps93WEh8429mnkOfJ6skmv7PyOMjUjsEWvVdxdmpmbjaWtpBleemk4BQxhM6C3/e6CKETcjQCkl3GA==
-    size: 61527310
-    blockMapSize: 64876
+    sha512: n9drVKmoGsatH93ZlnNb1KQGqPvvPAfSJUHfORJkK6wh6sSaYFX7LCEfRcfKSE9jePJWeaiPA/kQhnEq9Zo9WA==
+    size: 61725116
+    blockMapSize: 64651
   - url: BANCACY.Mac.Installable.0.0.5.dmg
-    sha512: T2CtK9+UyRLKYlwr0TcuOnVKuIysZ7s/uyT7es3IqaRRLtg4nbac3P6eseVhpJUt60SQDhrWMzwispbqQIurxQ==
-    size: 63826208
+    sha512: JuFarEreuSO/mUclgSIOa5J3Itx+obPT0VVG0SamoNJwrjKNWK0y7hRtiEqU5zYXjDFv7wd+fhesPnvCd3doew==
+    size: 64071279
 path: BANCACY-0.0.5-mac.zip
-sha512: 2kbq4hcdps93WEh8429mnkOfJ6skmv7PyOMjUjsEWvVdxdmpmbjaWtpBleemk4BQxhM6C3/e6CKETcjQCkl3GA==
-releaseDate: '2019-09-06T09:06:51.154Z'
+sha512: n9drVKmoGsatH93ZlnNb1KQGqPvvPAfSJUHfORJkK6wh6sSaYFX7LCEfRcfKSE9jePJWeaiPA/kQhnEq9Zo9WA==
+releaseDate: '2019-09-06T10:12:28.659Z'
