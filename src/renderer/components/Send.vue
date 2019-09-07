@@ -256,11 +256,11 @@
             data = '0x';
             value = sendAmount;
           } else {
-            let contract = new web3.eth.Contract(env.abi, env.contractAddress);
+            let contract = new web3.eth.Contract(env.abi, env.contractAddress.bnyMainnet);
 
             data = contract.methods.transfer(sendRecipient, sendAmount).encodeABI();
             // Change the recipient to be the token contract address.
-            sendRecipient = env.contractAddress;
+            sendRecipient = env.contractAddress.bnyMainnet;
             value = 0;
           }
 

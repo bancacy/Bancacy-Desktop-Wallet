@@ -41,7 +41,7 @@
               Current Price Discount: {{0.25 * (1-(tokensSold / 534600000)).toLocaleString()}} %
             </p>
             <p class="text-xs uppercase text-left text-black text-xs font-bold" >      
-                1 ETH = {{((0.25 * (1-(tokensSold / 534600000))) * 100000000 + 100000000).toLocaleString() }} BNY
+                1 ETH = {{((0.25 * (1-(tokensSold / 534600000))) * 54000 + 54000).toLocaleString() }} BNY
           </p>
             <div>
             <div class="flex justify-between">
