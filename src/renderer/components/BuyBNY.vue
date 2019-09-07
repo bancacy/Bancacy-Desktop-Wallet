@@ -213,7 +213,6 @@
         this.ethBalance   = ethBalance != null ? parseFloat(ethBalance) : '0'; 
         this.Rate   = Rate != null ? parseFloat(Rate) : '0';
         this.totalDeposit   = totalDeposit != null ? parseFloat(totalDeposit) : '0';
-        
       },
       update : function(){
         this.getData();

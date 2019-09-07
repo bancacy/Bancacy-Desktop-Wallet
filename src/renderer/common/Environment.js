@@ -1,5 +1,5 @@
 // Token Information
-const appVersion = "0.0.5";
+const appVersion = "0.0.6";
 const MAINNET = true;
 
 const tokenName 	= 'Bancacy';
