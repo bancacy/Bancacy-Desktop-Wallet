@@ -54,12 +54,6 @@ export default new Router({
       props: true
     },
     {
-      path: '/BuyBNY',
-      name: 'BuyBNY',
-      component: require('@/components/BuyBNY').default,
-      props: true
-    },
-    {
       path: '/settings',
       name: 'Settings',
       component: require('@/components/Settings').default,
