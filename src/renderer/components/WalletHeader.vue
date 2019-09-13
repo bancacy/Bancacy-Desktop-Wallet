@@ -25,10 +25,6 @@
           <i class="fa fa-dollar-sign mr-1"></i>
           Invest
         </a>
-        <a href="#" class="block  mt-2 text-brand-light border border-brand-dark rounded hover:text-white mr-1 no-underline hover:border-white px-2 py-2 bg-brand-dark" @click="navigate('BuyBNY')">
-          <i class="fa fa-money-bill-alt mr-1"></i>
-           Buy BNY
-        </a>
         <a href="#" class="block  mt-2 text-brand-light border border-brand-dark rounded hover:text-white mr-1 no-underline hover:border-white px-2 py-2 bg-brand-dark" @click="navigate('PassiveIncome')"
        >
           <i class="fa fa-percent mr-1"></i>
