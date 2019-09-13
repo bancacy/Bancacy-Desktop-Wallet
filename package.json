@@ -1,6 +1,6 @@
 {
   "name": "BANCACYDesktop",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Info <Info@bancacy.com>",
   "repository": {
     "type": "git",
@@ -27,24 +27,29 @@
     "productName": "BANCACY",
     "appId": "org.Bancacy.Desktop-Wallet",
     "directories": {
-      "output": "build"
-    },
-    "files": [
-      "dist/electron/**/*"
-    ],
-    "mac": {},
+			"output": "build"
+		},
+		"files": [
+			"dist/electron/**/*"
+		],
+		"mac": {
+			"icon": "build/icons/icon.icns"
+		},
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
-    },
-    "linux": {},
+			"icon": "build/icons/icon.ico",
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64",
+						"ia32"
+					]
+				}
+			]
+		},
+    "linux": {
+			"icon": "build/icons"
+		},
     "publish": {
       "provider": "github"
     },
