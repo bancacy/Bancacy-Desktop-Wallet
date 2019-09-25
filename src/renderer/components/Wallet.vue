@@ -4,15 +4,16 @@
     <div class="flex-grow">
       <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
         <div>
-          1 {{ tokenTicker }} = {{ "Not Tradable Yet" }}
+          1 {{ tokenTicker }} = {{tokenPrice}} USD
         </div>
         <div class="flex items-center">
           <div class="mr-12">
-            <!-- <p class="text-xs text-center uppercase leading-normal">Balance</p>  -->
+            <p class="text-xs text-center uppercase leading-normal">Balance</p>
             <p class="leading-none font-robot text-xl">{{ (tokenBalance) }} {{ tokenTicker }}</p>
           </div>
           <div>
-            <p class="leading-none font-robot text-xl">{{ "Not Tradable Yet" }} </p>
+            <p class="text-xs text-center uppercase leading-normal">Value</p>
+            <p class="leading-none font-robot text-xl">${{ tokenValue }} </p>
           </div>
         </div>
       </div>
@@ -251,7 +252,7 @@
         tokenTicker: env.tokenTicker,
         tokenName: env.tokenName,
         walletAddress: '',
-  			tokenPrice: '0.00',
+  		tokenPrice: '0.00',
         tokenBalance: '0',
         tokenValue: '0.00',
         completedTxs: [],
@@ -313,15 +314,22 @@
         this.completedINVS = [];
         this.getCompletedTxs();
       },
-      getTokenPrice: function () {
-          axios.get('https://api.coingecko.com/api/v3/coins/pundi-x?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false')
-          .then(response => {
-              if (response.data.market_data.current_price.usd != undefined) {
-                  localStorage.setItem('tokenPrice', JSON.parse(response.data.market_data.current_price.usd).toString());
-                  this.tokenPrice = utils.format(response.data.market_data.current_price.usd,5)
-            }
-          }).catch(error => {console.log(error)});
-      },
+	getTokenPrice: function () {
+		fetch('https://api3.stex.com/public/ticker/1073')
+		.then(response => response.json())
+		.then(data => {
+			console.log("fetch",data)
+			if (data.data.bid != undefined) {
+				var ETH_Value = parseFloat(data.data.bid).toFixed(8);
+				var USD_Value = data.data.fiatsRate.USD;
+				localStorage.setItem('tokenPrice', JSON.parse(ETH_Value * USD_Value).toString());
+				this.tokenPrice = (ETH_Value * USD_Value).toFixed(8)
+			}
+		}).catch(error => {
+			console.log(error)
+			this.tokenPrice = "No response from STEX API."
+		});
+	},
       getTokenBalance: function () {
         web3.eth.call({
           to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
