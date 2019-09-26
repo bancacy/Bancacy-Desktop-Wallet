@@ -1,8 +1,8 @@
-version: 0.0.3
+version: 0.0.9
 files:
-  - url: BANCACY.Installable.0.0.3.exe
-    sha512: 1dwpXiXa8YjQXuoBjNM+MpsWpw42azHlQTeFjkBSzuaEIvY756BVOTSOMD2dsAwzRvhzbG+lsnBTWRVeDrlDKA==
-    size: 88351600
-path: BANCACY.Installable.0.0.3.exe
-sha512: 1dwpXiXa8YjQXuoBjNM+MpsWpw42azHlQTeFjkBSzuaEIvY756BVOTSOMD2dsAwzRvhzbG+lsnBTWRVeDrlDKA==
-releaseDate: '2019-07-11T16:14:47.359Z'
+  - url: BANCACY.Installable.0.0.9.exe
+    sha512: ZdGbj/wzaiHcoe8p8z1i4FQjd/qJXtjgpCEVG2EWN0coGz1VPXJboOhN52HMZE0vlVhDc6OoDD6+7gvAnQs6Sg==
+    size: 89164219
+path: BANCACY.Installable.0.0.9.exe
+sha512: ZdGbj/wzaiHcoe8p8z1i4FQjd/qJXtjgpCEVG2EWN0coGz1VPXJboOhN52HMZE0vlVhDc6OoDD6+7gvAnQs6Sg==
+releaseDate: '2019-09-25T20:19:00.617Z'
