@@ -6,14 +6,17 @@ appId: org.Bancacy.Desktop-Wallet
 files:
   - filter:
       - dist/electron/**/*
-mac: {}
+mac:
+  icon: build/icons/icon.icns
 win:
+  icon: build/icons/icon.ico
   target:
     - target: nsis
       arch:
         - x64
         - ia32
-linux: {}
+linux:
+  icon: build/icons
 publish:
   provider: github
 nsis:

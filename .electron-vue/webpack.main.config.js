@@ -25,6 +25,10 @@ let mainConfig = {
       {
         test: /\.node$/,
         use: 'node-loader'
+      },
+      {
+        test: /\.vue$/,
+        use: 'vue-loader'
       }
     ]
   },
@@ -38,7 +42,7 @@ let mainConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin()
+	new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']

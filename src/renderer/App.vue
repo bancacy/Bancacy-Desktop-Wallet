@@ -24,28 +24,16 @@
       },
       mounted(){
         this.expired = false;
-        this.checkForUpdate().then((result,error) => {
-          if(result){
-          //console.log("LOADED APP") 
-          //console.log("expired",this.expired)
-          }
-          if(error){
-            console.log("error",error)
-            //console.log("expired",this.expired)
-          }
-          //console.log("outexpirerd",this.expired)
-          if(this.expired == true){
-            this.$router.push({name: 'Expired'});
-            //return false;
-          }
-        });
+		// TODO: Uncomment this promise to check for update
+		
       },
       methods : {
         checkForUpdate : async function(){
           return new Promise((resolve,reject) => {
             this.refreshing = true;
             this.updateAvailable = false;
-            axios.get('https://api.github.com/repos/lunamonkey/Bancacy-Desktop-Wallet-Version-Checker/releases/latest?' + now())
+			// TODO: Create new repo
+			axios.get('https://api.github.com/repos/XXXX/Bancacy-Desktop-Wallet-Version-Checker/releases/latest?' + now())
               .then(response => {
                   if (response.data.tag_name != undefined) {
                       
