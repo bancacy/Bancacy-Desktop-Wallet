@@ -1,9 +1,9 @@
-version: 0.0.7
+version: 0.0.10
 files:
-  - url: BANCACYDesktop-0.0.7-x86_64.AppImage
-    sha512: dkaxz3D9ziuVFdz7TRxo7LJmFejilntlJrvoj+k48nKfGPtbKTCeS/krsc47e1kZP2ISqOiNNCibMRDBmQ2h9A==
-    size: 65198327
-    blockMapSize: 70203
-path: BANCACYDesktop-0.0.7-x86_64.AppImage
-sha512: dkaxz3D9ziuVFdz7TRxo7LJmFejilntlJrvoj+k48nKfGPtbKTCeS/krsc47e1kZP2ISqOiNNCibMRDBmQ2h9A==
-releaseDate: '2019-09-07T11:52:38.392Z'
+  - url: BANCACYDesktop-0.0.10-x86_64.AppImage
+    sha512: JSWV3UGoqDaXuvBgyAjwVzZdxvm+q4R/wvKoiRkFTe0UeINqHQnlWJ6KCNSiDCJ9k5KcdLhYVzUwhom5BUEy2Q==
+    size: 67916305
+    blockMapSize: 72533
+path: BANCACYDesktop-0.0.10-x86_64.AppImage
+sha512: JSWV3UGoqDaXuvBgyAjwVzZdxvm+q4R/wvKoiRkFTe0UeINqHQnlWJ6KCNSiDCJ9k5KcdLhYVzUwhom5BUEy2Q==
+releaseDate: '2019-09-29T14:08:41.249Z'
