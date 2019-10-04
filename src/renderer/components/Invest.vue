@@ -257,12 +257,12 @@
           })
       },
       addGwei: function () {
-        this.sendGas = this.sendGas + 1;
+        this.sendGas ++;
         this.setSendGasFee();
       },
       subtractGwei: function () {
         if(this.sendGas > 0) {
-          this.sendGas = this.sendGas - 1;             
+          this.sendGas --;             
           this.setSendGasFee();
         }
       },
