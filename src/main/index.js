@@ -1,12 +1,14 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron'
 
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\');
+  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow;
+let mainWindow
 
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+const winURL = process.env.NODE_ENV === 'development'
+  ? `http://localhost:9080`
+  : `file://${__dirname}/index.html`
 
 function createWindow () {
   /**
@@ -20,8 +22,8 @@ function createWindow () {
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+    mainWindow = null
+  })
 
 const template = [
     {
@@ -51,7 +53,7 @@ const template = [
         {role: 'close'}
       ]
     }
-  ];
+  ]
   
   if (process.platform === 'darwin') {
     template.unshift({
@@ -68,7 +70,7 @@ const template = [
         {type: 'separator'},
         {role: 'quit'}
       ]
-    });
+    })
   
     // Edit menu
     template[1].submenu.push(
@@ -80,7 +82,7 @@ const template = [
           {role: 'stopspeaking'}
         ]
       }
-    );
+    )
   
     // Window menu
     template[3].submenu = [
@@ -89,7 +91,7 @@ const template = [
       {role: 'zoom'},
       {type: 'separator'},
       {role: 'front'}
-    ];
+    ]
   }
   
   const menu = Menu.buildFromTemplate(template)
@@ -101,9 +103,9 @@ app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    app.quit()
   }
-});
+})
 
 app.on('activate', () => {
   if (mainWindow === null) {

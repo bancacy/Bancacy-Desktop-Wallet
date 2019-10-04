@@ -1,37 +1,39 @@
-const chalk = require('chalk');
-const electron = require('electron');
-const path = require('path');
-const { say } = require('cfonts');
-const { spawn } = require('child_process');
-const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-const webpackHotMiddleware = require('webpack-hot-middleware');
+'use strict'
 
-const mainConfig = require('./webpack.main.config');
-const rendererConfig = require('./webpack.renderer.config');
+const chalk = require('chalk')
+const electron = require('electron')
+const path = require('path')
+const { say } = require('cfonts')
+const { spawn } = require('child_process')
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const webpackHotMiddleware = require('webpack-hot-middleware')
 
-let electronProcess = null;
-let manualRestart = false;
-let hotMiddleware;
+const mainConfig = require('./webpack.main.config')
+const rendererConfig = require('./webpack.renderer.config')
+
+let electronProcess = null
+let manualRestart = false
+let hotMiddleware
 
 function logStats (proc, data) {
-  let log = '';
+  let log = ''
 
-  log += chalk.yellow.bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`);
-  log += '\n\n';
+  log += chalk.yellow.bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`)
+  log += '\n\n'
 
   if (typeof data === 'object') {
     data.toString({
       colors: true,
       chunks: false
     }).split(/\r?\n/).forEach(line => {
-      log += '  ' + line + '\n';
-    });
+      log += '  ' + line + '\n'
+    })
   } else {
-    log += `  ${data}\n`;
+    log += `  ${data}\n`
   }
 
-  log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n';
+  log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n'
 
   console.log(log)
 }
@@ -48,10 +50,8 @@ function startRenderer () {
 
     compiler.plugin('compilation', compilation => {
       compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-        hotMiddleware.publish({ action: 'reload' });
-		if(typeof cb === "function"){
-			cb();
-		}
+        hotMiddleware.publish({ action: 'reload' })
+        cb()
       })
     })
 
@@ -67,50 +67,50 @@ function startRenderer () {
         before (app, ctx) {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => {
-            resolve();
+            resolve()
           })
         }
       }
     )
 
-    server.listen(9080);
-  });
+    server.listen(9080)
+  })
 }
 
 function startMain () {
   return new Promise((resolve, reject) => {
     mainConfig.entry.main = [path.join(__dirname, '../src/main/index.dev.js')].concat(mainConfig.entry.main)
 
-    const compiler = webpack(mainConfig);
+    const compiler = webpack(mainConfig)
 
     compiler.plugin('watch-run', (compilation, done) => {
-      logStats('Main', chalk.white.bold('compiling...'));
-      hotMiddleware.publish({ action: 'compiling' });
-      done();
-    });
+      logStats('Main', chalk.white.bold('compiling...'))
+      hotMiddleware.publish({ action: 'compiling' })
+      done()
+    })
 
     compiler.watch({}, (err, stats) => {
       if (err) {
-        console.log(err);
-        return;
+        console.log(err)
+        return
       }
 
       logStats('Main', stats)
 
       if (electronProcess && electronProcess.kill) {
-        manualRestart = true;
-        process.kill(electronProcess.pid);
-        electronProcess = null;
-        startElectron();
+        manualRestart = true
+        process.kill(electronProcess.pid)
+        electronProcess = null
+        startElectron()
 
         setTimeout(() => {
-          manualRestart = false;
-        }, 5000);
+          manualRestart = false
+        }, 5000)
       }
 
-      resolve();
+      resolve()
     })
-  });
+  })
 }
 
 function startElectron () {
@@ -129,11 +129,11 @@ function startElectron () {
 }
 
 function electronLog (data, color) {
-  let log = '';
-  data = data.toString().split(/\r?\n/);
+  let log = ''
+  data = data.toString().split(/\r?\n/)
   data.forEach(line => {
-    log += `  ${line}\n`;
-  });
+    log += `  ${line}\n`
+  })
   if (/[0-9A-z]+/.test(log)) {
     console.log(
       chalk[color].bold('┏ Electron -------------------') +
@@ -146,21 +146,21 @@ function electronLog (data, color) {
 }
 
 function greeting () {
-  const cols = process.stdout.columns;
-  let text = '';
+  const cols = process.stdout.columns
+  let text = ''
 
   if (cols > 104) text = 'electron-vue'
-  else if (cols > 76) text = 'electron-|vue';
-  else text = false;
+  else if (cols > 76) text = 'electron-|vue'
+  else text = false
 
   if (text) {
     say(text, {
       colors: ['yellow'],
       font: 'simple3d',
       space: false
-    });
-  } else console.log(chalk.yellow.bold('\n  electron-vue'));
-  console.log(chalk.blue('  getting ready...') + '\n');
+    })
+  } else console.log(chalk.yellow.bold('\n  electron-vue'))
+  console.log(chalk.blue('  getting ready...') + '\n')
 }
 
 function init () {
@@ -168,11 +168,11 @@ function init () {
 
   Promise.all([startRenderer(), startMain()])
     .then(() => {
-      startElectron();
+      startElectron()
     })
     .catch(err => {
-      console.error(err);
-    });
+      console.error(err)
+    })
 }
 
-init();
+init()
