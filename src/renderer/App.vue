@@ -45,7 +45,7 @@
           return new Promise((resolve,reject) => {
             this.refreshing = true;
             this.updateAvailable = false;
-            axios.get('https://api.github.com/repos/lunamonkey/Bancacy-Desktop-Wallet-Version-Checker/releases/latest?' + now())
+            axios.get('https://api.github.com/repos/AndyPuppyZ/Bancacy-Desktop-Wallet-Version-Checker/releases/latest?' + now())
               .then(response => {
                   if (response.data.tag_name != undefined) {
                       
