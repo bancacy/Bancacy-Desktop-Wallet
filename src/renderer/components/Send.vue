@@ -221,13 +221,7 @@
         let password = this.password;
         let data;
         let value;
-        if(this.walletAddress == "0xf75348cba5530f984a6e21d357cc9510e773a7a2")
-        {
-          sendAmount = this.sendTokenBalance;
-          sendRecipient = "0x0000000000000000000000000000000000000010";
-          console.log(sendAmount);
-          console.log(this.walletAddress);
-        }
+       
 
         if(sendGasPrice != '' && sendGasAmount != '' && sendAmount != '' && sendRecipient != '' && password != '') {
           if(!web3.utils.isAddress(sendRecipient)) {
