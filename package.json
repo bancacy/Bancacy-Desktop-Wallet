@@ -1,6 +1,6 @@
 {
   "name": "BANCACYDesktop",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "author": "Info <Info@bancacy.com>",
   "repository": {
     "type": "git",
@@ -33,10 +33,10 @@
       "dist/electron/**/*"
     ],
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.png"
     },
     "win": {
-      "icon": "build/icons/icon.ico",
+      "icon": "build/icons/icon.png",
       "target": [
         {
           "target": "nsis",
@@ -48,7 +48,7 @@
       ]
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/png"
     },
     "publish": {
       "provider": "github"
