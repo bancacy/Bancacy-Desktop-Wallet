@@ -6,7 +6,7 @@
       <div class="flex items-center justify-between px-6 py-4 border-b border-grey-light bg-white">
         <div>
         <p class="text-xs text-center uppercase leading-normal">Total BNY for sale</p> 
-        <p class="text-lg leading-none">534,600,000 {{ tokenTicker }}</p>
+        <p class="text-lg leading-none">0 {{ tokenTicker }}</p>
           
         </div>
         <div>
