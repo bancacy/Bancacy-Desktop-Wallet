@@ -240,9 +240,7 @@
   import Invest from './Invest';
   import {sign} from 'ethjs-signer';
   import moment, { months } from 'moment';
-
   const web3 = utils.web3();
-
   export default {
   	name: 'Wallet',
     components: { WalletHeader },
@@ -291,7 +289,6 @@
         let completedPSVS  = await localStorage.getItem('tokenCompletedPSVS');
         let pendingPSVS    = await localStorage.getItem('tokenpendingPSVS');
        
-
         this.tokenPrice   = tokenPrice != null ? parseFloat(tokenPrice) : '-.--';
         this.tokenBalance = tokenBalance != null ? parseFloat(tokenBalance) : '0';
         this.pendingTxs   = pendingTxs != null ? JSON.parse(pendingTxs) : [];
@@ -300,14 +297,12 @@
         this.pendingINVS   = pendingINVS != null ? JSON.parse(pendingINVS) : [];
         this.completedPSVS = completedPSVS != null ? JSON.parse(completedPSVS) : [];
         this.pendingPSVS   = pendingPSVS != null ? JSON.parse(pendingPSVS) : [];
-
         this.updateWallet();
       },
       
       updateWallet: function () {
         this.getTokenPrice();
         this.getTokenBalance();
-
         localStorage.removeItem("tokenCompletedPSVS")
         localStorage.removeItem("tokenCompletedINVS")
         this.completedPSVS = [];
@@ -336,12 +331,10 @@
           data: '0x70a08231000000000000000000000000' + this.walletAddress.substring(2)
         }, (error, balance) => {
           if(balance) {
-
             let tokenBalance = web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'); 
             let tokenValue = tokenBalance * this.tokenPrice;
             this.tokenBalance = utils.format(tokenBalance, 2);
             this.tokenValue = utils.format(tokenValue, 2);
-
             localStorage.setItem('tokenBalance', tokenBalance.toString());
           }
           if(error){
@@ -351,7 +344,6 @@
       },
       getCompletedTxs: function () {
         this.refreshing = true;
-
         let pendingTxs = [];
         let pendingINVS = [];
         let pendingPSVS = [];
@@ -362,7 +354,6 @@
             let listINVS = [];
             
             let fromBlock = 0;
-
             if(this.completedTxs.length != null) {
               fromBlock = response - 86000;
             }
@@ -374,7 +365,6 @@
             }
             
             let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
-
             let INV = await contract.getPastEvents('Deposit', { filter: {_investor: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(INV.length > 0) {
               INV = _.uniqBy(INV, 'transactionHash');
@@ -396,7 +386,6 @@
                 listTxs.push(toTxs[i]);
               }
             }
-
             let fromTxs = await contract.getPastEvents('Transfer', { filter: {_from: this.walletAddress}, fromBlock: fromBlock, toBlock: 'latest'});
             if(fromTxs.length > 0) {
               fromTxs = _.uniqBy(fromTxs, 'transactionHash');
@@ -413,15 +402,12 @@
             listPSVS.sort((a, b) => {
               return parseInt(b.blockNumber) - parseInt(a.blockNumber);
             });
-
             if(listTxs.length > 0) {
               let lastTxTimestamp = 0;
               let completedTx;
-
               if(this.completedTxs.length > 0) {
                 lastTxTimestamp = parseInt(this.completedTxs[0].timestamp);
               }
-
               let tempPending = Object.values(this.pendingTxs);
               for(var p = 0; p < tempPending.length; p++) {
                 pendingTxs.push(tempPending[p].key);
@@ -435,13 +421,10 @@
                     let transactionFrom = listTx.returnValues._from;
                     let transactionAmount = listTx.returnValues._value;
                     
-
                     if(pendingTxs.includes(listTx.transactionHash)) {
                       this.pendingTxs = this.pendingTxs.filter((tx) => {return tx.key != listTx.transactionHash});
-
                       localStorage.setItem('tokenPendingTxs', JSON.stringify(this.pendingTxs));
                     }
-
                     if(parseInt(timestamp) > lastTxTimestamp) {
                       completedTx = {
                         key: transactionHash,
@@ -449,11 +432,8 @@
                         from: _.toLower(transactionFrom),
                         amount: transactionAmount
                       };
-
                       this.completedTxs = [completedTx].concat(this.completedTxs);
-
                       localStorage.setItem('tokenCompletedTxs', JSON.stringify(this.completedTxs));
-
                       this.refreshing = false;
                     } else {
                       this.refreshing = false;
@@ -464,15 +444,12 @@
               localStorage.setItem('tokenCompletedTxs', JSON.stringify(this.completedTxs));
               this.refreshing = false;
             } 
-
             if(listINVS.length > 0) {
               let lastINVTimestamp = 0;
               let completedIN;
-
               if(this.completedINVS.length > 0) {
                 lastINVTimestamp = parseInt(this.completedINVS[0].timestamp);
               }
-
               let tempPending = Object.values(this.pendingINVS);
               for(var o = 0; o < tempPending.length; o++) {
                 pendingINVS.push(tempPending[o].key);
@@ -487,13 +464,10 @@
                     let transactionAmount = listIN.returnValues._investmentValue;
                     let transactionID = listIN.returnValues._ID;
                     let transactionUnlock = listIN.returnValues._unlocktime;
-
                     if(pendingINVS.includes(listIN.transactionHash)) {
                       this.pendingINVS = this.pendingINVS.filter((tx) => {return tx.key != listIN.transactionHash});
-
                       localStorage.setItem('tokenPendingINVS', JSON.stringify(this.pendingINVS));
                     }
-
                     this.getInvestmentStatus(transactionID).then((spentInvestment) => {
                       
                       if(parseInt(timestamp) > lastINVTimestamp) {
@@ -507,32 +481,24 @@
                           spent: spentInvestment,
                           ready : true
                         };
-
                         this.completedINVS = [completedIN].concat(this.completedINVS);
-
                         localStorage.setItem('tokenCompletedINVS', JSON.stringify(this.completedINVS));
-
                         this.refreshing = false;
                       } else {
                         this.refreshing = false;
                       }
-
                       
                     });
-
                     
                   }).catch(error => {console.log(error)});
               }
             }
-
           if(listPSVS.length > 0) {
               let lastPSVTimestamp = 0;
               let completedPS;
-
               if(this.completedPSVS.length > 0) {
                 lastPSVTimestamp = parseInt(this.completedPSVS[0].timestamp);
               }
-
               let tempPending = Object.values(this.pendingPSVS);
               for(var o = 0; o < tempPending.length; o++) {
                 pendingPSVS.push(tempPending[o].key);
@@ -551,10 +517,8 @@
                     console.log("transactionInvestmentTime",transactionInvestmentTime)
                     if(pendingPSVS.includes(listPS.transactionHash)) {
                       this.pendingPSVS = this.pendingPSVS.filter((tx) => {return tx.key != listPS.transactionHash});
-
                       localStorage.setItem('tokenPendingPSVS', JSON.stringify(this.pendingPSVS));
                     }
-
                     this.getPassiveIncomeStatus(transactionID2).then((spentInvestment) => {
                       this.getPassiveIncomeDay(transactionID2).then((day) => {
                         if(parseInt(timestamp) > lastPSVTimestamp) {
@@ -572,9 +536,7 @@
                           //console.log("t-tit",moment().unix(),transactionInvestmentTime)
                           //console.log(moment().unix()-transactionInvestmentTime)
                           this.completedPSVS = [completedPS].concat(this.completedPSVS);
-
                           localStorage.setItem('tokenCompletedPSVS', JSON.stringify(this.completedPSVS));
-
                           this.refreshing = false;
                         } else {
                           this.refreshing = false;
@@ -584,14 +546,11 @@
                   }).catch(error => {console.log(error)});
               }
             }
-
-
           }).catch(error => {console.log(error)});
           
       },
       getInvestmentStatus :  function(investmentID){
         return new Promise((resolve, reject) => {
-
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           //alert("1")
           contract.methods.getInvestmentStatus(investmentID).call().then((result) =>  { 
@@ -615,7 +574,6 @@
       },
       getPassiveIncomeStatus :  function(investmentID){
         return new Promise((resolve, reject) => {
-
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           //alert("1")
           contract.methods.getPassiveIncomeStatus(investmentID).call().then((result) =>  { 
@@ -639,7 +597,6 @@
       },
       getPassiveIncomeDay :  function(investmentID){
         return new Promise((resolve, reject) => {
-
           let contract = new web3.eth.Contract(env.abi, MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet);
           //alert("1")
           contract.methods.getPassiveIncomeDay(investmentID).call().then((result) =>  { 
@@ -673,7 +630,6 @@
       },
       open: function (txHash) {
         const url = 'https://' + (MAINNET ? '' : 'ropsten.') + 'etherscan.io/tx/' + txHash;
-
         this.$electron.shell.openExternal(url);
       },
       ClaimInvestment: function (ID) {

@@ -1,6 +1,6 @@
 {
   "name": "BANCACYDesktop",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "author": "Info <Info@bancacy.com>",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "",
+    "postinstall": "electron-builder install-app-deps && npm run lint:fix",
     "css": "npx tailwind build src/renderer/assets/css/tailwind.scss -o src/renderer/assets/css/tailwind.css"
   },
   "build": {
