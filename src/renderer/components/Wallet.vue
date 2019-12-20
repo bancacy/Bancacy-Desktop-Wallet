@@ -684,7 +684,7 @@
                   to: MAINNET ? env.contractAddress.bnyMainnet : env.contractAddress.bnyTestnet,
                   from : this.walletAddress,
                   value: 0,
-                  gas: 400000,
+                  gas: 80000,
                   gasPrice: 10 * 1.0e9,
                   data: data
               };
